@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "124356000629",
+    "firebase_url": "https://homehead-2cbb6.firebaseio.com",
+    "project_id": "homehead-2cbb6",
+    "storage_bucket": "homehead-2cbb6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:124356000629:android:1aa936a727262516",
+        "android_client_info": {
+          "package_name": "com.paddy.homehead"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "124356000629-ab820221a44bds7sthgssivbvoldevlp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkYwX_naSiaSUMru5AtX0lBD1849hu4dg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
