@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_main);
 
 
-        Button btn = findViewById(R.id.button_start_listen);
-        btn.setOnClickListener(new View.OnClickListener() {
+        Button btnStart = findViewById(R.id.button_start_listen);
+        btnStart.setOnClickListener(new View.OnClickListener() {
             //start execution of ssh commands
             @Override
             public void onClick(View v){
@@ -36,7 +36,27 @@ public class MainActivity extends AppCompatActivity  {
                     @Override
                     protected Void doInBackground(Integer... params) {
                         try {
-                            executeSSHcommand();
+                            executeSSHcommandStart();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+                }.execute(1);
+            }
+        });
+
+
+        Button btnStop = findViewById(R.id.button_stop_listen);
+        btnStop.setOnClickListener(new View.OnClickListener() {
+            //start execution of ssh commands
+            @Override
+            public void onClick(View v){
+                new AsyncTask<Integer, Void, Void>(){
+                    @Override
+                    protected Void doInBackground(Integer... params) {
+                        try {
+                            executeSSHcommandStop();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -48,7 +68,7 @@ public class MainActivity extends AppCompatActivity  {
 
     }
 
-    public void executeSSHcommand(){
+    public void executeSSHcommandStart(){
         String user = "pi";
         String password = "raspberry";
         String host = "192.168.1.73";
@@ -71,7 +91,38 @@ public class MainActivity extends AppCompatActivity  {
                     .setAction("Action", null).show();
         }
         catch(JSchException e){
-           // Snackbar to indicate connection status (failure) and show the error in the UI
+            // Snackbar to indicate connection status (failure) and show the error in the UI
+            Snackbar.make(findViewById(android.R.id.content),
+                    "Connection Error : "+e.getMessage(),
+                    Snackbar.LENGTH_LONG)
+                    .setDuration(20000).setAction("Action", null).show();
+        }
+    }
+
+    public void executeSSHcommandStop(){
+        String user = "pi";
+        String password = "raspberry";
+        String host = "192.168.1.73";
+        int port=22;
+        try{
+
+            JSch jsch = new JSch();
+            Session session = jsch.getSession(user, host, port);
+            session.setPassword(password);
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.setTimeout(10000);
+            session.connect();
+            ChannelExec channel = (ChannelExec)session.openChannel("exec");
+            channel.setCommand("killall python");
+            channel.connect();
+            channel.disconnect();
+            // Snackbar to indicate connection status : success
+            Snackbar.make(findViewById(android.R.id.content),
+                    "Process Successfully Stopped!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
+        catch(JSchException e){
+            // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
                     "Connection Error : "+e.getMessage(),
                     Snackbar.LENGTH_LONG)
