@@ -9,8 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -19,14 +17,8 @@ import com.jcraft.jsch.Session;
 
 public class MainActivity extends AppCompatActivity  {
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     public MainActivity() {
 
-    }
-
-    public MainActivity(FirebaseFirestore db) {
-        this.db = db;
     }
 
     @Override
