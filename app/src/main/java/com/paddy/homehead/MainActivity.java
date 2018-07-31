@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity  {
         String host = "192.168.1.73";
         int port=22;
         try{
-
             JSch jsch = new JSch();
             Session session = jsch.getSession(user, host, port);
             session.setPassword(password);
