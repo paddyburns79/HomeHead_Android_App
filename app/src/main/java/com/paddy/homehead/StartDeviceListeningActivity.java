@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toolbar;
 
 import com.jcraft.jsch.ChannelExec;
@@ -15,16 +16,30 @@ import com.jcraft.jsch.Session;
 
 public class StartDeviceListeningActivity extends AppCompatActivity {
 
+    String deviceId, ipAddress, devicePassword;
+
+    EditText deviceIdInput;
+    EditText ipAddressInput;
+    EditText devicePasswordInput;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_device_listening);
+
+        deviceIdInput = (EditText) findViewById(R.id.start_device_deviceID_textbox);
+        ipAddressInput = (EditText) findViewById(R.id.start_device_IPAdd_textbox);
+        devicePasswordInput = (EditText) findViewById(R.id.start_device_Device_PW_textbox);
 
         Button btnStart = findViewById(R.id.button_start_listen);
         btnStart.setOnClickListener(new View.OnClickListener() {
             //start execution of ssh commands
             @Override
             public void onClick(View v){
+                deviceId = deviceIdInput.getText().toString();
+                ipAddress = ipAddressInput.getText().toString();
+                devicePassword = devicePasswordInput.getText().toString();
+
                 new AsyncTask<Integer, Void, Void>(){
                     @Override
                     protected Void doInBackground(Integer... params) {
@@ -41,9 +56,9 @@ public class StartDeviceListeningActivity extends AppCompatActivity {
     }
 
     public void executeSSHcommandStart(){
-        String user = "pi";
-        String password = "raspberry";
-        String host = "192.168.1.73";
+        String user = deviceId;
+        String password = devicePassword;
+        String host = ipAddress;
         int port=22;
         try{
 
@@ -65,7 +80,7 @@ public class StartDeviceListeningActivity extends AppCompatActivity {
         catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
-                    "Connection Error : "+e.getMessage(),
+                    "Error. Please check details entered or your service",
                     Snackbar.LENGTH_LONG)
                     .setDuration(20000).setAction("Action", null).show();
         }
