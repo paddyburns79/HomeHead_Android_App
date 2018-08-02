@@ -41,6 +41,16 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
 
+        // set onclick listener for System Config Menu Image Button (nav to activity)
+        ImageButton buttonSystemConfig = findViewById(R.id.buttomDeviceConfig);
+        buttonSystemConfig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent systemConfigMenuIntent = new Intent(MainActivity.this, DeviceConfigMainMenuActivity.class);
+                startActivity(systemConfigMenuIntent);
+            }
+        });
+
         // set onclick listener for System Shutdown Image Button (nav to activity)
         ImageButton buttonShutdown = findViewById(R.id.buttonDeviceShutdown);
         buttonShutdown.setOnClickListener(new View.OnClickListener() {

@@ -43,7 +43,8 @@
 
         <activity android:name=".StartDeviceListeningActivity" />
         <activity android:name=".StopDeviceListeningActivity" />
-        <activity android:name=".SystemShutdownActivity"></activity>
+        <activity android:name=".SystemShutdownActivity" />
+        <activity android:name=".DeviceConfigMainMenuActivity"></activity>
     </application>
 
 </manifest>
