@@ -100,4 +100,8 @@
     <string name="error_login_msg">Input Fields Empty</string>
     <string name="shutdown_submit">Submit</string>
     <string name="shutdown_device">Shutdown Device</string>
+    <string name="device_configuration_menu">Device Configuration Menu</string>
+    <string name="add_edit_device_ip_address">Add / Edit Device IP Address</string>
+    <string name="add_new_trigger_noise">Add New Trigger Noise</string>
+    <string name="calibrate_noise_trigger_levels">Calibrate Noise Trigger Levels</string>
 </resources>
