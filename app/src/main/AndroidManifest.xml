@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".MyFirebaseMessagingService"
+        <service
+            android:name=".MyFirebaseMessagingService"
             android:permission="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -42,6 +43,7 @@
 
         <activity android:name=".StartDeviceListeningActivity" />
         <activity android:name=".StopDeviceListeningActivity" />
+        <activity android:name=".SystemShutdownActivity"></activity>
     </application>
 
 </manifest>

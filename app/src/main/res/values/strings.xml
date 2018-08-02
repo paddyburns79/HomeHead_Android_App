@@ -98,4 +98,6 @@
     <string name="submit">Submit</string>
     <string name="cancel">Cancel</string>
     <string name="error_login_msg">Input Fields Empty</string>
+    <string name="shutdown_submit">Submit</string>
+    <string name="shutdown_device">Shutdown Device</string>
 </resources>

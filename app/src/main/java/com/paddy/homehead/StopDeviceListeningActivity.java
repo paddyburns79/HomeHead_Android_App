@@ -18,7 +18,7 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
     // Strings to accept user input data
     String deviceId, ipAddress, devicePassword;
 
-    // Input values for each input field
+    // Input values for each inout field
     EditText deviceIdInput;
     EditText ipAddressInput;
     EditText devicePasswordInput;
@@ -38,18 +38,32 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
             //start execution of ssh commands
             @Override
             public void onClick(View v){
+                // retrieval of input field data on button click
+                deviceId = deviceIdInput.getText().toString();
+                ipAddress = ipAddressInput.getText().toString();
+                devicePassword = devicePasswordInput.getText().toString();
 
+                new AsyncTask<Integer, Void, Void>(){
+                    @Override
+                    protected Void doInBackground(Integer... params) {
+                        try {
+                            executeSSHcommandStopListening();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+                }.execute(1);
             }
         });
     }
 
-    public void executeSSHcommandStart(){
-        String user = "pi";
-        String password = "raspberry";
-        String host = "192.168.1.73";
+    public void executeSSHcommandStopListening(){
+        String user = deviceId;
+        String password = ipAddress;
+        String host = devicePassword;
         int port=22;
         try{
-
             JSch jsch = new JSch();
             Session session = jsch.getSession(user, host, port);
             session.setPassword(password);
@@ -62,13 +76,13 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
             //channel.disconnect();
             // Snackbar to indicate connection status : success
             Snackbar.make(findViewById(android.R.id.content),
-                    "Successfully Stopped!", Snackbar.LENGTH_LONG)
+                    "Listening Mode Successfully Stopped!", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }
         catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
-                    "Connection Error : "+e.getMessage(),
+                    "Error. Please check details entered or your internet service",
                     Snackbar.LENGTH_LONG)
                     .setDuration(20000).setAction("Action", null).show();
         }
