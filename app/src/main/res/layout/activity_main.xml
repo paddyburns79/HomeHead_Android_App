@@ -20,7 +20,7 @@
     <Button
         android:id="@+id/button_start_listen_activity"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -34,16 +34,13 @@
         android:id="@+id/stopListeningText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="28dp"
         android:text="@string/stop_device_listening"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.32999998" />
+        app:layout_constraintTop_toBottomOf="@+id/button_start_listen_activity" />
 
     <Button
         android:id="@+id/button_stop_listen_activity"
@@ -56,5 +53,57 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stopListeningText" />
+
+    <TextView
+        android:id="@+id/customiseSettingsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/customise_app_settings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_stop_listen_activity" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="61dp"
+        android:layout_height="59dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/system_config_icon"
+        android:tint="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customiseSettingsText"
+        app:srcCompat="@android:drawable/ic_menu_preferences" />
+
+    <TextView
+        android:id="@+id/shutdownSystemText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/shutdown_system"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="61dp"
+        android:layout_height="59dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shutdownSystemText"
+        app:srcCompat="@android:drawable/ic_lock_power_off"
+        android:tint="#FF1744"
+        android:contentDescription="@string/system_off_icon" />
 
 </android.support.constraint.ConstraintLayout>

@@ -90,4 +90,8 @@
     <string name="enter_device_password">Enter Device Password:</string>
     <string name="device_password">Device Password</string>
     <string name="disable_device_active_listening_mode">Disable Device Active Listening Mode</string>
+    <string name="customise_app_settings">Customise App Settings</string>
+    <string name="shutdown_system">Shutdown System</string>
+    <string name="system_off_icon">System off icon</string>
+    <string name="system_config_icon">system_config_icon</string>
 </resources>
