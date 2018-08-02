@@ -169,7 +169,6 @@ public class MainActivity extends AppCompatActivity  {
             Snackbar.make(findViewById(android.R.id.content),
                     "Successfully Stopped!", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-
         }
         catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
