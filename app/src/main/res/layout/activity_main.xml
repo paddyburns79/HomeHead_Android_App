@@ -67,7 +67,7 @@
         app:layout_constraintTop_toBottomOf="@+id/button_stop_listen_activity" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/buttomDeviceConfig"
         android:layout_width="61dp"
         android:layout_height="59dp"
         android:layout_marginEnd="8dp"
@@ -90,20 +90,20 @@
         android:text="@string/shutdown_system"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+        app:layout_constraintTop_toBottomOf="@+id/buttomDeviceConfig" />
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/buttonDeviceShutdown"
         android:layout_width="61dp"
         android:layout_height="59dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:contentDescription="@string/system_off_icon"
+        android:tint="#FF1744"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shutdownSystemText"
-        app:srcCompat="@android:drawable/ic_lock_power_off"
-        android:tint="#FF1744"
-        android:contentDescription="@string/system_off_icon" />
+        app:srcCompat="@android:drawable/ic_lock_power_off" />
 
 </android.support.constraint.ConstraintLayout>

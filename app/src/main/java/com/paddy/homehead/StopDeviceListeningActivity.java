@@ -18,7 +18,7 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
     // Strings to accept user input data
     String deviceId, ipAddress, devicePassword;
 
-    // Input values for each inout field
+    // Input values for each input field
     EditText deviceIdInput;
     EditText ipAddressInput;
     EditText devicePasswordInput;
@@ -38,22 +38,7 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
             //start execution of ssh commands
             @Override
             public void onClick(View v){
-                // retrieval of input field data on button click
-                deviceId = deviceIdInput.getText().toString();
-                ipAddress = ipAddressInput.getText().toString();
-                devicePassword = devicePasswordInput.getText().toString();
 
-                new AsyncTask<Integer, Void, Void>(){
-                    @Override
-                    protected Void doInBackground(Integer... params) {
-                        try {
-                            executeSSHcommandStart();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        return null;
-                    }
-                }.execute(1);
             }
         });
     }
