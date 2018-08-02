@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -14,16 +15,34 @@ import com.jcraft.jsch.Session;
 
 public class StopDeviceListeningActivity extends AppCompatActivity {
 
+    // Strings to accept user input data
+    String deviceId, ipAddress, devicePassword;
+
+    // Input values for each inout field
+    EditText deviceIdInput;
+    EditText ipAddressInput;
+    EditText devicePasswordInput;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stop_device_listening);
+
+        // linking input values to each input field
+        deviceIdInput = (EditText) findViewById(R.id.start_device_deviceID_textbox);
+        ipAddressInput = (EditText) findViewById(R.id.start_device_IPAdd_textbox);
+        devicePasswordInput = (EditText) findViewById(R.id.start_device_Device_PW_textbox);
 
         Button btnStart = findViewById(R.id.button_stop_listen);
         btnStart.setOnClickListener(new View.OnClickListener() {
             //start execution of ssh commands
             @Override
             public void onClick(View v){
+                // retrieval of input field data on button click
+                deviceId = deviceIdInput.getText().toString();
+                ipAddress = ipAddressInput.getText().toString();
+                devicePassword = devicePasswordInput.getText().toString();
+
                 new AsyncTask<Integer, Void, Void>(){
                     @Override
                     protected Void doInBackground(Integer... params) {

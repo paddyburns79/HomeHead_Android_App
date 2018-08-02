@@ -16,8 +16,10 @@ import com.jcraft.jsch.Session;
 
 public class StartDeviceListeningActivity extends AppCompatActivity {
 
+    // Strings to accept user input data
     String deviceId, ipAddress, devicePassword;
 
+    // Input values to hold input field data
     EditText deviceIdInput;
     EditText ipAddressInput;
     EditText devicePasswordInput;
@@ -27,6 +29,7 @@ public class StartDeviceListeningActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_device_listening);
 
+        // linking input values to each input field
         deviceIdInput = (EditText) findViewById(R.id.start_device_deviceID_textbox);
         ipAddressInput = (EditText) findViewById(R.id.start_device_IPAdd_textbox);
         devicePasswordInput = (EditText) findViewById(R.id.start_device_Device_PW_textbox);
@@ -36,6 +39,7 @@ public class StartDeviceListeningActivity extends AppCompatActivity {
             //start execution of ssh commands
             @Override
             public void onClick(View v){
+                // retrieval of input field data on button click
                 deviceId = deviceIdInput.getText().toString();
                 ipAddress = ipAddressInput.getText().toString();
                 devicePassword = devicePasswordInput.getText().toString();
