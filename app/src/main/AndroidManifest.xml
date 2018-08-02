@@ -6,6 +6,7 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="@xml/my_backup_rules"
         android:icon="@mipmap/homehead_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/homehead_launcher_round"
@@ -20,9 +21,10 @@
         </activity>
 
         <service
-            android:name=".MyFirebaseMessagingService">
+            android:name=".MyFirebaseMessagingService"
+            android:permission="true">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
@@ -35,11 +37,14 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id"/>
+            android:value="@string/default_notification_channel_id" />
 
+        <activity android:name=".StartDeviceListeningActivity" />
+        <activity android:name=".StopDeviceListeningActivity" />
+        <activity android:name=".SystemShutdownActivity" />
+        <activity android:name=".DeviceConfigMainMenuActivity"></activity>
     </application>
 
 </manifest>
