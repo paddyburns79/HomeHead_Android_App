@@ -58,10 +58,13 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Method to execute a command to disable device listening via SSH connection
+     */
     public void executeSSHcommandStopListening(){
         String user = deviceId;
-        String password = ipAddress;
-        String host = devicePassword;
+        String password = devicePassword;
+        String host = ipAddress;
         int port=22;
         try{
             JSch jsch = new JSch();
@@ -73,10 +76,10 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
             ChannelExec channel = (ChannelExec)session.openChannel("exec");
             channel.setCommand("killall python");
             channel.connect();
-            //channel.disconnect();
+            channel.disconnect();
             // Snackbar to indicate connection status : success
             Snackbar.make(findViewById(android.R.id.content),
-                    "Listening Mode Successfully Stopped!", Snackbar.LENGTH_LONG)
+                    "Listening Mode Successfully Disabled!", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }
         catch(JSchException e){

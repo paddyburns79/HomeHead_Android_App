@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toolbar;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -48,7 +47,7 @@ public class StartDeviceListeningActivity extends AppCompatActivity {
                     @Override
                     protected Void doInBackground(Integer... params) {
                         try {
-                            executeSSHcommandStart();
+                            executeSSHCommandStartListening();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -62,7 +61,7 @@ public class StartDeviceListeningActivity extends AppCompatActivity {
     /**
      * Method to execute a command to commence listening via SSH connection
      */
-    public void executeSSHcommandStart(){
+    public void executeSSHCommandStartListening(){
         String user = deviceId;
         String password = devicePassword;
         String host = ipAddress;
@@ -87,7 +86,7 @@ public class StartDeviceListeningActivity extends AppCompatActivity {
         catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
-                    "Error. Please check details entered or your service",
+                    "Error. Please check details entered or your internet service",
                     Snackbar.LENGTH_LONG)
                     .setDuration(20000).setAction("Action", null).show();
         }
