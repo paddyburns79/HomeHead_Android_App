@@ -33,8 +33,8 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
         ipAddressInput = (EditText) findViewById(R.id.start_device_IPAdd_textbox);
         devicePasswordInput = (EditText) findViewById(R.id.start_device_Device_PW_textbox);
 
-        Button btnStart = findViewById(R.id.button_stop_listen);
-        btnStart.setOnClickListener(new View.OnClickListener() {
+        Button btnStop = findViewById(R.id.button_stop_listen);
+        btnStop.setOnClickListener(new View.OnClickListener() {
             //start execution of ssh commands
             @Override
             public void onClick(View v){
