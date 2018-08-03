@@ -12,11 +12,11 @@
         android:layout_height="0dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="420dp"
-        android:text="Submit"
+        android:layout_marginTop="20dp"
+        android:text="@string/submit_btn_shutdown"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/start_device_Device_PW_textbox" />
 
     <TextView
         android:id="@+id/shutdown_activ_title"
@@ -38,10 +38,11 @@
         android:layout_height="50dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="40dp"
         android:ems="10"
         android:hint="@string/pi_device_id"
         android:inputType="textPersonName"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/start_deviceInfo_label" />
@@ -50,30 +51,14 @@
         android:id="@+id/start_deviceInfo_label"
         android:layout_width="wrap_content"
         android:layout_height="21dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="52dp"
         android:text="@string/enter_device_info"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.168" />
-
-    <EditText
-        android:id="@+id/start_device_IPAdd_textbox"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
-        android:ems="10"
-        android:hint="@string/ip_address"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/start_device_deviceID_textbox" />
+        app:layout_constraintTop_toBottomOf="@+id/shutdown_activ_title" />
 
     <EditText
         android:id="@+id/start_device_Device_PW_textbox"
@@ -81,12 +66,13 @@
         android:layout_height="49dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/device_password"
         android:inputType="textPassword"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/start_device_IPAdd_textbox" />
+        app:layout_constraintTop_toBottomOf="@+id/start_device_deviceID_textbox" />
 
 </android.support.constraint.ConstraintLayout>
