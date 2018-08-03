@@ -15,9 +15,6 @@ public class AddEditIPAddressActivity extends AppCompatActivity {
     // Textview to hold IP Address retrieved from SharedPreferences
     TextView ipAddressView;
 
-    // Strings to accept user input data
-    String deviceIpAddress;
-
     // Input values to hold input field data
     EditText ipAddressInput;
 
@@ -25,6 +22,9 @@ public class AddEditIPAddressActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_ipaddress);
+
+        // Calling method to display the current IP Address SharedPreference stored value
+        showIPAddressData();
 
         // linking input value to input field
         ipAddressInput = (EditText) findViewById(R.id.input_add_IP_address);
