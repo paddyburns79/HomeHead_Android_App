@@ -1,7 +1,9 @@
 package com.paddy.homehead;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -29,6 +31,8 @@ public class AddEditIPAddressActivity extends AppCompatActivity {
         // linking input value to input field
         ipAddressInput = (EditText) findViewById(R.id.input_add_IP_address);
     }
+
+
 
     /**
      * Method to save IP Address data input to SharedPreferences on button click
@@ -61,5 +65,26 @@ public class AddEditIPAddressActivity extends AppCompatActivity {
         SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
         String rbpIpAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
         ipAddressView.setText(rbpIpAddress);
+    }
+
+    public void displayIpTooltip(View view) {
+
+        // set Alert Dialog box to confirm system shutdown
+        AlertDialog.Builder shutdownConfirm = new AlertDialog.Builder(AddEditIPAddressActivity.this);
+        // allow alert dialog to be cancelled by clicking area outside of the box
+        shutdownConfirm.setCancelable(true);
+        // set messages
+        shutdownConfirm.setTitle("Obtaining IP Addres");
+        shutdownConfirm.setMessage("The IP address of the Raspberry Pi device (format example : 192.168.x.xxx) can be obtained by typing 'hostname -I' into the command line of the device, or by using an app such as Fing (available for free from the Google Play store)");
+        // set negative 'cancel' button
+        shutdownConfirm.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int whichButton) {
+                dialogInterface.cancel();
+            }
+        });
+
+        shutdownConfirm.show();
+
     }
 }

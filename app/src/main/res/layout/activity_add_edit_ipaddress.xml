@@ -50,11 +50,9 @@
 
     <EditText
         android:id="@+id/input_add_IP_address"
-        android:layout_width="242dp"
+        android:layout_width="214dp"
         android:layout_height="46dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="60dp"
         android:ems="10"
         android:hint="@string/add_ip_activity_ip_input"
         android:inputType="textPersonName"
@@ -69,30 +67,13 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
+        android:onClick="saveIpAddressData"
         android:text="@string/submit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_add_IP_address"
-        android:onClick="saveIpAddressData"/>
-
-    <TextView
-        android:id="@+id/add_ip_address_description_text_para3"
-        android:layout_width="325dp"
-        android:layout_height="92dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="60dp"
-        android:text="@string/get_ip_address_hint1"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.526"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_ip_submit_button"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/input_add_IP_address" />
 
     <TextView
         android:id="@+id/textView_current_IP_address"
@@ -117,6 +98,20 @@
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_ip_submit_button" />
+
+    <ImageButton
+        android:id="@+id/imgbtn_ip_address_tooltip"
+        android:layout_width="31dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="60dp"
+        android:contentDescription="@string/ip_address_tooltip_icon"
+        android:onClick="displayIpTooltip"
+        android:tint="#D50000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/input_add_IP_address"
+        app:layout_constraintTop_toBottomOf="@+id/add_ip_address_description_text_para2"
+        app:srcCompat="@android:drawable/ic_menu_help" />
 
 
 </android.support.constraint.ConstraintLayout>

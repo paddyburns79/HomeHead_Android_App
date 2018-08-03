@@ -109,8 +109,9 @@
     <string name="add_ip_address_para2">Enter the IP address below in order to store it on this Android device :</string>
     <string name="add_ip_activity_ip_input">IP Address</string>
     <string name="get_ip_address_hint1">The IP address of the Raspberry Pi device (format example : 192.168.x.xxx) can be obtained by typing \"hostname -I\" into the command line of the device, or by using an app such as Fing (available for free from the Google Play store).</string>
-    <string name="get_ip_address_hint2">Alternively you can use an app such as Fing (available for free from the Google Play store) to obtain the IP Address.</string>
-    <string name="textview_CurrentIpAdd">TextView</string>
+    <string name="get_ip_address_hint2">Alternatively you can use an app such as Fing (available for free from the Google Play store) to obtain the IP Address.</string>
+    <string name="textview_CurrentIpAdd">No IP Address Currently Stored</string>
     <string name="current_ip_address_stored">Current IP Address Stored :</string>
     <string name="submit_btn_shutdown">Submit</string>
+    <string name="ip_address_tooltip_icon">ip_address_tooltip_icon</string>
 </resources>
