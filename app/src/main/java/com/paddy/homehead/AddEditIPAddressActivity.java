@@ -74,7 +74,7 @@ public class AddEditIPAddressActivity extends AppCompatActivity {
         // allow alert dialog to be cancelled by clicking area outside of the box
         shutdownConfirm.setCancelable(true);
         // set messages
-        shutdownConfirm.setTitle("Obtaining IP Addres");
+        shutdownConfirm.setTitle("Obtaining IP Address");
         shutdownConfirm.setMessage("The IP address of the Raspberry Pi device (format example : 192.168.x.xxx) can be obtained by typing 'hostname -I' into the command line of the device, or by using an app such as Fing (available for free from the Google Play store)");
         // set negative 'cancel' button
         shutdownConfirm.setNegativeButton("OK", new DialogInterface.OnClickListener() {
