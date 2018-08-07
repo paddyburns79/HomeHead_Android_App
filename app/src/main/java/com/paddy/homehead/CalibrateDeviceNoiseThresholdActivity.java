@@ -109,6 +109,7 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
                     "Device is calibrated"+channel.getExitStatus()+channel.isClosed(), Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }
+
         catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
@@ -116,6 +117,8 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
                     Snackbar.LENGTH_LONG)
                     .setDuration(20000).setAction("Action", null).show();
         }
+        // Resetting the configCycle check in the event the user wishes to recalibrate the device
+        configCycles = 1;
     }
 
 
