@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/homehead_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat">
-       <!-- android:theme="@style/Theme.AppCompat.Light -->
+
+        <!-- android:theme="@style/Theme.AppCompat.Light -->
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,7 +47,8 @@
         <activity android:name=".StopDeviceListeningActivity" />
         <activity android:name=".SystemShutdownActivity" />
         <activity android:name=".DeviceConfigMainMenuActivity" />
-        <activity android:name=".AddEditIPAddressActivity"></activity>
+        <activity android:name=".AddEditIPAddressActivity" />
+        <activity android:name=".CalibrateDeviceNoiseThresholdActivity"></activity>
     </application>
 
 </manifest>

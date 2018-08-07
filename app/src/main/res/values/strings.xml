@@ -114,4 +114,6 @@
     <string name="current_ip_address_stored">Current IP Address Stored :</string>
     <string name="submit_btn_shutdown">Submit</string>
     <string name="ip_address_tooltip_icon">ip_address_tooltip_icon</string>
+    <string name="calibrate_device_noise_trigger_levels">Calibrate Device Trigger Levels</string>
+    <string name="calibrate_device">Calibrate Device</string>
 </resources>

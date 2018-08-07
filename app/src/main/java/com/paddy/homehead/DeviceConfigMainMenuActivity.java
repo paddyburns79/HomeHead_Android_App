@@ -25,6 +25,17 @@ public class DeviceConfigMainMenuActivity extends AppCompatActivity {
             }
         });
 
+        // set onclick listener for Calibrate Noise Trigger Levels Button (nav to activity)
+        Button btnCalibrateNoiseLevels = findViewById(R.id.button_calibrate_bg_noise);
+        btnCalibrateNoiseLevels.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent calibrateNoiseIntent = new Intent(DeviceConfigMainMenuActivity.this, CalibrateDeviceNoiseThresholdActivity.class);
+                startActivity(calibrateNoiseIntent);
+
+            }
+        });
+
 
     }
 }
