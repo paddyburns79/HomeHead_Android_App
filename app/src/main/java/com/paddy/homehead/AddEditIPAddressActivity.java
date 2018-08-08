@@ -67,6 +67,10 @@ public class AddEditIPAddressActivity extends AppCompatActivity {
         ipAddressView.setText(rbpIpAddress);
     }
 
+    /**
+     * Method to display tooltip (Info on adding IP Address) on image button click
+     * @param view
+     */
     public void displayIpTooltip(View view) {
 
         // set Alert Dialog box to confirm system shutdown

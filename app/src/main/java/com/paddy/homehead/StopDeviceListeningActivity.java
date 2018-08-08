@@ -81,15 +81,17 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
             channel.setCommand("killall python");
             channel.connect();
             channel.disconnect();
-            // Snackbar to indicate connection status : success
-            Snackbar.make(findViewById(android.R.id.content),
-                    "Listening Mode Successfully Disabled!", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+                // Snackbar to indicate connection status : success
+                if (channel.isClosed()==true) {
+                    Snackbar.make(findViewById(android.R.id.content),
+                            "Listening Mode Successfully Disabled! ", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
         }
         catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
-                    "Error. Please check details entered (incl. Rasperry Pi IP Address stored) or your internet connection",
+                    "Error. Check details entered (incl. Raspberry Pi IP Address stored) or your internet connection",
                     Snackbar.LENGTH_LONG)
                     .setDuration(20000).setAction("Action", null).show();
         }

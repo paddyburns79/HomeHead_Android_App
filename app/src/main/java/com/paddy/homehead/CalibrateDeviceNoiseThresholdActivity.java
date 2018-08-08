@@ -1,9 +1,11 @@
 package com.paddy.homehead;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -97,28 +99,54 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
             channel.connect();
             //channel.disconnect();
 
-            // Snackbar output display to indicate calibration status
+            // Display message while the device calibration process is carried out (channel remains open during process)
             while ((configCycles ==1) && (channel.isClosed()==false)) {
                 Snackbar.make(findViewById(android.R.id.content),
-                        "Processing Request"+channel.getExitStatus()+channel.isClosed(), Snackbar.LENGTH_LONG)
+                        "Device Calibrating", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
            }
            // failsafe to ensure config cycle only runs once
             configCycles++;
+            // Display message to confirm the calibration process has been completed (channel closes on completion)
             Snackbar.make(findViewById(android.R.id.content),
-                    "Device is calibrated"+channel.getExitStatus()+channel.isClosed(), Snackbar.LENGTH_LONG)
+                    "Device Successfully Calibrated.", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }
 
         catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
-                    "Error. Please check details entered (incl. Rasperry Pi IP Address stored) or your internet connection",
+                    "Error. Check details entered (incl. Raspberry Pi IP Address stored) or your internet connection",
                     Snackbar.LENGTH_LONG)
                     .setDuration(20000).setAction("Action", null).show();
         }
         // Resetting the configCycle check in the event the user wishes to recalibrate the device
         configCycles = 1;
+    }
+
+    /**
+     * Method to display tooltip (Info on calibrating device) on image button click
+     * @param view
+     */
+    public void displayCalibrateDeviceTooltip(View view) {
+
+        // set Alert Dialog box to confirm system shutdown
+        AlertDialog.Builder shutdownConfirm = new AlertDialog.Builder(CalibrateDeviceNoiseThresholdActivity.this);
+        // allow alert dialog to be cancelled by clicking area outside of the box
+        shutdownConfirm.setCancelable(true);
+        // set messages
+        shutdownConfirm.setTitle("Calibrating Device");
+        shutdownConfirm.setMessage("Calibration of the device noise detection parameters takes approximately 90 seconds, after which the message 'Device Successfully Calibrated' will be displayed. Please ensure no unusual loud noises occur during this process.\n\nRepeat calibration if you feel noise events are not being registered.");
+        // set negative 'cancel' button
+        shutdownConfirm.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int whichButton) {
+                dialogInterface.cancel();
+            }
+        });
+
+        shutdownConfirm.show();
+
     }
 
 

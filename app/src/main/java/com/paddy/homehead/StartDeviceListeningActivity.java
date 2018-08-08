@@ -90,7 +90,7 @@ public class StartDeviceListeningActivity extends AppCompatActivity {
         catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
-                    "Error. Please check details entered (incl. Rasperry Pi IP Address stored) or your internet connection",
+                    "Error. Check details entered (incl. Rasbperry Pi IP Address stored) or your internet connection",
                     Snackbar.LENGTH_LONG)
                     .setDuration(20000).setAction("Action", null).show();
         }
