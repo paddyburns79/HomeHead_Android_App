@@ -100,7 +100,7 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
             //channel.disconnect();
 
             // Display message while the device calibration process is carried out (channel remains open during process)
-            while ((configCycles ==1) && (channel.isClosed()==false)) {
+            while ((configCycles ==1) && (!channel.isClosed())) {
                 Snackbar.make(findViewById(android.R.id.content),
                         "Device Calibrating", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -110,13 +110,19 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
             // Display message to confirm the calibration process has been completed (channel closes on completion)
             Snackbar.make(findViewById(android.R.id.content),
                     "Device Successfully Calibrated.", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+                    .setDuration(20000).setAction("Action", null).show();
+            // Disconnect channel
+            channel.disconnect();
+            // clear input fields
+            deviceIdInput.getText().clear();
+            devicePasswordInput.getText().clear();
+
         }
 
         catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
-                    "Error. Check details entered (incl. Raspberry Pi IP Address stored) or your internet connection",
+                    "Error. Check details entered, your internet connection, or if device has been shut down",
                     Snackbar.LENGTH_LONG)
                     .setDuration(20000).setAction("Action", null).show();
         }

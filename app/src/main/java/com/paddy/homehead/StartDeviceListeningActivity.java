@@ -81,16 +81,21 @@ public class StartDeviceListeningActivity extends AppCompatActivity {
             ChannelExec channel = (ChannelExec)session.openChannel("exec");
             channel.setCommand("cd sopare; ./sopare.py -l");
             channel.connect();
-            //channel.disconnect();
-            // Snackbar to indicate connection status : success
-            Snackbar.make(findViewById(android.R.id.content),
-                    "Device is Actively Listening", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            // output if channel successfully opened
+            if (channel.isConnected()) {
+                // Snackbar to indicate connection status : success
+                Snackbar.make(findViewById(android.R.id.content),
+                        "Device is Actively Listening", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                // clear input fields
+                deviceIdInput.getText().clear();
+                devicePasswordInput.getText().clear();
+            }
         }
         catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
-                    "Error. Check details entered (incl. Rasbperry Pi IP Address stored) or your internet connection",
+                    "Error. Check details entered, your internet connection, or if device has been shut down",
                     Snackbar.LENGTH_LONG)
                     .setDuration(20000).setAction("Action", null).show();
         }

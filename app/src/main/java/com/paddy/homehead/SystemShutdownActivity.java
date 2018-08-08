@@ -74,16 +74,23 @@ public class SystemShutdownActivity extends AppCompatActivity {
             ChannelExec channel = (ChannelExec)session.openChannel("exec");
             channel.setCommand("sudo shutdown -h now");
             channel.connect();
-            channel.disconnect();
-            // Snackbar to indicate connection status : success
-            Snackbar.make(findViewById(android.R.id.content),
-                    "Device successfully shut down. You can now safely turn device off at mains supply", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+
+            if (channel.isConnected()== true) {
+                // Snackbar to indicate connection status : success
+                Snackbar.make(findViewById(android.R.id.content),
+                        "Device successfully shut down. You can now safely turn device off at mains supply", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                // disconnect channel
+                channel.disconnect();
+                // clear input fields
+                deviceIdInput.getText().clear();
+                devicePasswordInput.getText().clear();
+            }
         }
         catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
-                    "Error. Check details entered (incl. Raspberry Pi IP Address stored) or your internet connection",
+                    "Error. Check details entered and your internet connection. Or device may already be shut down",
                     Snackbar.LENGTH_LONG)
                     .setDuration(20000).setAction("Action", null).show();
         }

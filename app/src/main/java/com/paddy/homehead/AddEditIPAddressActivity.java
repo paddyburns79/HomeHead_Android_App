@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 public class AddEditIPAddressActivity extends AppCompatActivity {
 
+    String savedIpAddress;
+
     // Textview to hold IP Address retrieved from SharedPreferences
     TextView ipAddressView;
 
@@ -32,26 +34,31 @@ public class AddEditIPAddressActivity extends AppCompatActivity {
         ipAddressInput = (EditText) findViewById(R.id.input_add_IP_address);
     }
 
-
-
     /**
      * Method to save IP Address data input to SharedPreferences on button click
      * @param view
      */
     public void saveIpAddressData(View view) {
+
+    // checking if new IP Address entered matches current before writing to Shared Preferences file
+    if (ipAddressInput.getText().toString().equalsIgnoreCase(savedIpAddress)) {
+        // Toast popup to confirm IP Address entered matches that already saved
+        Toast.makeText(this, "IP Address Entered Already Saved", Toast.LENGTH_LONG).show();
+    } else {
         // setting Shared Preferences file (Mode Private so only this app can access it)
         SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
-
         // write IP Address input data to SharedPreferences
         SharedPreferences.Editor editor = ipAddressSharedPref.edit();
         editor.putString("rbp_ip_address", ipAddressInput.getText().toString());
         editor.apply();
-
-        // Toast popup to confirm siccessful save operation
+        // Toast popup to confirm successful save operation
         Toast.makeText(this, "IP Address Saved", Toast.LENGTH_LONG).show();
+        // clear input field
+        ipAddressInput.getText().clear();
+    }
+    // calling method to refresh data displayed on button click
+    showIPAddressData();
 
-        // calling method to refresh data displayed on button click
-        showIPAddressData();
     }
 
     /**
@@ -65,6 +72,8 @@ public class AddEditIPAddressActivity extends AppCompatActivity {
         SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
         String rbpIpAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
         ipAddressView.setText(rbpIpAddress);
+        savedIpAddress = rbpIpAddress;
+
     }
 
     /**
