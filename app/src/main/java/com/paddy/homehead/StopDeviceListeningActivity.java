@@ -1,5 +1,7 @@
 package com.paddy.homehead;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +32,6 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
 
         // linking input values to each input field
         deviceIdInput = (EditText) findViewById(R.id.start_device_deviceID_textbox);
-        ipAddressInput = (EditText) findViewById(R.id.start_device_IPAdd_textbox);
         devicePasswordInput = (EditText) findViewById(R.id.start_device_Device_PW_textbox);
 
         Button btnStop = findViewById(R.id.button_stop_listen);
@@ -40,8 +41,11 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
             public void onClick(View v){
                 // retrieval of input field data on button click
                 deviceId = deviceIdInput.getText().toString();
-                ipAddress = ipAddressInput.getText().toString();
                 devicePassword = devicePasswordInput.getText().toString();
+
+                // Accessing SharedPreferences Data (Stored Device RBP IP Address)
+                SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
+                ipAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
 
                 new AsyncTask<Integer, Void, Void>(){
                     @Override
@@ -77,15 +81,21 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
             channel.setCommand("killall python");
             channel.connect();
             channel.disconnect();
-            // Snackbar to indicate connection status : success
-            Snackbar.make(findViewById(android.R.id.content),
-                    "Listening Mode Successfully Disabled!", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+                // Snackbar to indicate connection status : success
+                if (channel.isClosed()) {
+                    Snackbar.make(findViewById(android.R.id.content),
+                            "Listening Mode Successfully Disabled! ", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    // clear input fields
+                    deviceIdInput.getText().clear();
+                    devicePasswordInput.getText().clear();
+
+                }
         }
         catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
-                    "Error. Please check details entered or your internet service",
+                    "Error. Check details entered, your internet connection, or if device has been shut down",
                     Snackbar.LENGTH_LONG)
                     .setDuration(20000).setAction("Action", null).show();
         }
