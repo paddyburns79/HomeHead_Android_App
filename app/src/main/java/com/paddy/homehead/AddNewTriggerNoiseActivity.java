@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -28,9 +29,6 @@ import java.util.Properties;
 
 public class AddNewTriggerNoiseActivity extends AppCompatActivity {
 
-    // String to accept ssh cmd line output
-    String cmdOutput;
-
     // Strings to accept user input data
     String noiseDescription, deviceId, ipAddress, devicePassword;
 
@@ -44,7 +42,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_trigger_noise);
 
-       final String TAG = "TESTING";
+       //final String TAG = "TESTING";
 
         // linking input values to each input field
         deviceIdInput = (EditText) findViewById(R.id.calibrate_device_deviceID_textbox);
@@ -69,8 +67,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                     @Override
                     protected Void doInBackground(Integer... params) {
                         try {
-                            Log.i(TAG,executeSSHCommandAddNoise()+cmdOutput);
-                           // executeSSHCommandAddNoise();
+                            executeSSHCommandAddNoise();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -194,10 +191,11 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
 
 
 
-    public String executeSSHCommandAddNoise() throws Exception {
+    public void executeSSHCommandAddNoise() throws Exception {
         String user = deviceId;
         String password = devicePassword;
         String host = ipAddress;
+
         int port=22;
 
         JSch jsch = new JSch();
@@ -212,37 +210,59 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
         session.connect();
 
         // SSH Channel
-        ChannelExec channel = (ChannelExec)
-                session.openChannel("exec");
-        //ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        //channel.setOutputStream(baos);
-        //cmdOutput = new String(baos.toString());
-
-        /*OutputStream ops = channel.getOutputStream();
-        PrintStream ps = new PrintStream(ops);
-        channel.connect();
-        ps.println("cd sopare; ./sopare.py -v -t "+noiseDescription);*/
-
+        ChannelExec channel = (ChannelExec) session.openChannel("exec");
         // Execute command
         channel.setCommand("cd sopare; ./sopare.py -v -t "+noiseDescription);
-        channel.setInputStream(null);
+
+        final StringBuilder outputBuffer = new StringBuilder();
+        StringBuilder errorBuffer = new StringBuilder();
+
+        InputStream inStream = channel.getInputStream();
+        //BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        InputStream errStream = channel.getExtInputStream();
+
         channel.connect();
 
-        InputStream in = channel.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String TAG_err2 = "hh_err_log2";
 
-        String jarOutput = reader.readLine();
+        byte[] tmp = new byte[1024];
+        while (true) {
+            while (inStream.available() > 0) {
+                int i = inStream.read(tmp, 0, 1024);
+                if (i < 0) break;
+                outputBuffer.append(new String(tmp, 0, i));
+            }
+            while (errStream.available() > 0) {
+                int i = errStream.read(tmp, 0, 1024);
+                if (i < 0) break;
+                errorBuffer.append(new String(tmp, 0, i));
+                Log.i(TAG_err2, errorBuffer.toString());
+            }
+            if (channel.isClosed()) {
+                if ((inStream.available() > 0) || (errStream.available() > 0)) continue;
+                System.out.println("exit-status: " + channel.getExitStatus());
+                break;
+            }
 
-       /* while ((jarOutput = reader.readLine().toLowerCase()) != null)
-            System.out.println(jarOutput);
-        reader.close();*/
+            try {
+                Thread.sleep(1000);
+            } catch (Exception ee) {
+            }
 
-        // Snackbar to indicate connection status : success
+        }
+
+        String errBuff = errorBuffer.toString();
+
+        // Snackbar to indicate process has completed
         Snackbar.make(findViewById(android.R.id.content),
-                "Recording : Play Noise / Speak Phrase ", Snackbar.LENGTH_LONG)
+                "Recording Completed", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
+        // Disconnect channel
+        channel.disconnect();
 
-        return jarOutput;
+
+
+
 
     }
 
