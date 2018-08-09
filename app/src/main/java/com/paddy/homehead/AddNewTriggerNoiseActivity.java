@@ -223,7 +223,8 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
 
         channel.connect();
 
-        String TAG_err2 = "hh_err_log2";
+        String TAG_errStr = "hh_err_log2";
+        String cmdRecordMsg = "INFO:sopare.recorder:start endless recording";
 
         byte[] tmp = new byte[1024];
         while (true) {
@@ -231,12 +232,20 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                 int i = inStream.read(tmp, 0, 1024);
                 if (i < 0) break;
                 outputBuffer.append(new String(tmp, 0, i));
+                //Log.i(TAG_errStr, outputBuffer.toString());
             }
             while (errStream.available() > 0) {
                 int i = errStream.read(tmp, 0, 1024);
                 if (i < 0) break;
                 errorBuffer.append(new String(tmp, 0, i));
-                Log.i(TAG_err2, errorBuffer.toString());
+                Log.i(TAG_errStr, errorBuffer.toString());
+                //System.out.println("Log Pat :" +errorBuffer.toString());
+                // Snackbar to indicate process has completed
+                if (errorBuffer.toString().contains(cmdRecordMsg)) {
+                    Snackbar.make(findViewById(android.R.id.content),
+                            "Start Recording Noise / Phrase", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
             if (channel.isClosed()) {
                 if ((inStream.available() > 0) || (errStream.available() > 0)) continue;
@@ -251,7 +260,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
 
         }
 
-        String errBuff = errorBuffer.toString();
+
 
         // Snackbar to indicate process has completed
         Snackbar.make(findViewById(android.R.id.content),

@@ -123,5 +123,4 @@
     <string name="record_noise_phrase">Record Noise/Phrase</string>
     <string name="save_to_dictionary">Save to Dictionary</string>
     <string name="add_noise_tooltip_icon">add_noise_tooltip_icon</string>
-    <string name="command_line_output">Command Line Output</string>
 </resources>
