@@ -48,7 +48,8 @@
         <activity android:name=".SystemShutdownActivity" />
         <activity android:name=".DeviceConfigMainMenuActivity" />
         <activity android:name=".AddEditIPAddressActivity" />
-        <activity android:name=".CalibrateDeviceNoiseThresholdActivity"></activity>
+        <activity android:name=".CalibrateDeviceNoiseThresholdActivity" />
+        <activity android:name=".AddNewTriggerNoiseActivity"></activity>
     </application>
 
 </manifest>

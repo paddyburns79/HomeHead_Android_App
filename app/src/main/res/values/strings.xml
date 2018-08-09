@@ -102,7 +102,6 @@
     <string name="shutdown_device">Shutdown Device</string>
     <string name="device_configuration_menu">Device Configuration Menu</string>
     <string name="add_edit_device_ip_address">Add / Edit Device IP Address</string>
-    <string name="add_new_trigger_noise">Add New Trigger Noise</string>
     <string name="calibrate_noise_trigger_levels">Calibrate Noise Trigger Levels</string>
     <string name="add_ip_address_title_text">Add / Edit Device IP Address</string>
     <string name="add_ip_address_para1">In order to control the HomeHead system from your Android device, the IP Address of the Raspberry Pi device you are connecting to is required.</string>
@@ -116,4 +115,12 @@
     <string name="ip_address_tooltip_icon">ip_address_tooltip_icon</string>
     <string name="calibrate_device_noise_trigger_levels">Calibrate Device Trigger Levels</string>
     <string name="calibrate_device">Calibrate Device</string>
+    <string name="add_new_trigger_noise">Add New Trigger Noise</string>
+    <string name="enter_a_description_of_the_noise_one_word_only">Enter a Description of the Noise (one word only)</string>
+    <string name="noise_description">Noise Description</string>
+    <string name="add_noise_record_icon">add_noise_record_icon</string>
+    <string name="add_noise_save_icon">add_noise_save_icon</string>
+    <string name="record_noise_phrase">Record Noise/Phrase</string>
+    <string name="save_to_dictionary">Save to Dictionary</string>
+    <string name="add_noise_tooltip_icon">add_noise_tooltip_icon</string>
 </resources>

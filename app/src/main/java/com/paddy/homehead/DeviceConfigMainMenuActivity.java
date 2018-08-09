@@ -21,7 +21,16 @@ public class DeviceConfigMainMenuActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent addEditIPAddIntent = new Intent(DeviceConfigMainMenuActivity.this, AddEditIPAddressActivity.class);
                 startActivity(addEditIPAddIntent);
+            }
+        });
 
+        // set onclick listener for Add New Trigger Noise (nav to activity)
+        Button btnAddNewTriggerNoise = findViewById(R.id.button_add_new_trigger_noise);
+        btnAddNewTriggerNoise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent addNewTriggerNoiseIntent = new Intent(DeviceConfigMainMenuActivity.this, AddNewTriggerNoiseActivity.class);
+                startActivity(addNewTriggerNoiseIntent);
             }
         });
 
@@ -32,10 +41,7 @@ public class DeviceConfigMainMenuActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent calibrateNoiseIntent = new Intent(DeviceConfigMainMenuActivity.this, CalibrateDeviceNoiseThresholdActivity.class);
                 startActivity(calibrateNoiseIntent);
-
             }
         });
-
-
     }
 }

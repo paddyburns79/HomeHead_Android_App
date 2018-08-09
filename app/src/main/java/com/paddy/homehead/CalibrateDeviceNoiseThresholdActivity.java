@@ -61,8 +61,6 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
                 SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
                 ipAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
 
-                final String TAG = "TESTING";
-
                 new AsyncTask<Integer, Void, Void>(){
                     @Override
                     protected Void doInBackground(Integer... params) {
@@ -154,51 +152,5 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
         shutdownConfirm.show();
 
     }
-
-
-
-/*
-
-
-
-    public String executeSSHCommandCalibrateDevice() throws Exception {
-        String user = deviceId;
-        String password = devicePassword;
-        String host = ipAddress;
-        int port=22;
-
-        JSch jsch = new JSch();
-        Session session = jsch.getSession(user, host, port);
-        session.setPassword(password);
-
-        // Avoid asking for key confirmation
-        Properties prop = new Properties();
-        prop.put("StrictHostKeyChecking", "no");
-        session.setConfig(prop);
-
-        session.connect();
-
-        // SSH Channel
-        ChannelExec channelssh = (ChannelExec)
-                session.openChannel("exec");
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        channelssh.setOutputStream(baos);
-
-        // Execute command
-        channelssh.setCommand("cd sopare; python test/test_audio.py");
-        channelssh.connect();
-        //channelssh.disconnect();
-
-        // Snackbar to indicate connection status : success
-        */
-/*Snackbar.make(findViewById(android.R.id.content),
-                "Device is calibrated : " +baos.toString(), Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();*//*
-
-
-        return baos.toString();
-
-    }
-*/
 
 }
