@@ -190,7 +190,10 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * Method to execute a command to train a new noise via SSH connection
+     * @throws Exception
+     */
     public void executeSSHCommandAddNoise() throws Exception {
         String user = deviceId;
         String password = devicePassword;
