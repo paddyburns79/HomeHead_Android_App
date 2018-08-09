@@ -172,10 +172,10 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(android.R.id.content),
                         "Noise Successfully Saved to Dictionary", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                // clear input fields
+                /*// clear input fields
                 devicePasswordInput.getText().clear();
                 deviceIdInput.getText().clear();
-                noiseDescriptionInput.getText().clear();
+                noiseDescriptionInput.getText().clear();*/
                 // Disconnect channel
                 channel.disconnect();
             }
@@ -259,20 +259,12 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
             }
 
         }
-
-
-
         // Snackbar to indicate process has completed
         Snackbar.make(findViewById(android.R.id.content),
                 "Recording Completed", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
         // Disconnect channel
         channel.disconnect();
-
-
-
-
-
     }
 
 
