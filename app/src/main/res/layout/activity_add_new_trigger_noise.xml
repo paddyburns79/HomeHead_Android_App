@@ -157,7 +157,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="17dp"
         android:contentDescription="@string/add_noise_tooltip_icon"
-        android:onClick="di"
+        android:onClick="displayNewNoiseTooltip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/add_noise_name_textbox"

@@ -141,7 +141,6 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
         Map<String, Object> deviceData = new HashMap<>();
         deviceData.put("tokenID", token);
         deviceData.put("deviceName", deviceMod);
-        deviceData.put("location", "76LadyWallaceRoadBT283WS");
         // areHeadphonesConnected method check
         //deviceData.put("headphonesConnected", areHeadphonesConnected());
 
