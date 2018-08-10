@@ -125,24 +125,30 @@
         android:id="@+id/add_noise_record_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="@string/record_noise_phrase"
         android:textColor="@android:color/holo_green_dark"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/add_noise_save_to_dict_textView"
-        app:layout_constraintHorizontal_bias="0.311"
+        app:layout_constraintHorizontal_bias="0.354"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_noise_speak_imgBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/add_noise_speak_imgBtn"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/add_noise_save_to_dict_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="44dp"
         android:text="@string/save_to_dictionary"
         android:textColor="@android:color/holo_green_dark"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_noise_dictionary_imgBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/add_noise_dictionary_imgBtn"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
         android:id="@+id/imgbtn_add_noise_tooltip"
@@ -151,6 +157,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="17dp"
         android:contentDescription="@string/add_noise_tooltip_icon"
+        android:onClick="di"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/add_noise_name_textbox"
