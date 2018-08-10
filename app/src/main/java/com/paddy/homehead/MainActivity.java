@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_main);
 
         // set onclick listener for Enable Listening Button (nav to activity)
-        Button btnStart = findViewById(R.id.button_start_listen_activity);
+        ImageButton btnStart = findViewById(R.id.mainmenu_start_listening_imgbtn);
         btnStart.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity  {
         });
 
         // set onclick listener for Disable Listening Button (nav to activity)
-        Button btnStop = findViewById(R.id.button_stop_listen_activity);
+        ImageButton btnStop = findViewById(R.id.mainmenu_disable_listening_imgbtn);
         btnStop.setOnClickListener(new View.OnClickListener() {
 
             @Override
