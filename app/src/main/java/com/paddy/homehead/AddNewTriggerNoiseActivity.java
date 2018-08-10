@@ -151,7 +151,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                     // Snackbar to indicate process has completed
                     if (errorBuffer.toString().contains(cmdRecordMsg)) {
                         Snackbar.make(findViewById(android.R.id.content),
-                                "Start Recording Noise / Phrase", Snackbar.LENGTH_LONG)
+                                "Record Noise / Phrase", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     }
                 }

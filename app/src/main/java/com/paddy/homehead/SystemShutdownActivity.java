@@ -97,7 +97,7 @@ public class SystemShutdownActivity extends AppCompatActivity {
     }
 
     /**
-     * Method to call a custom Alert Dialog box
+     * Method to call a custom Alert Dialog box to confirm system shutdown
      */
     public void shutdownBtnAlertDialog() {
     // set Alert Dialog box to confirm system shutdown

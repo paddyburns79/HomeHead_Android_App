@@ -81,14 +81,14 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
             channel.setCommand("killall python");
             channel.connect();
             channel.disconnect();
-                // Snackbar to indicate connection status : success
-                if (channel.isClosed()) {
-                    Snackbar.make(findViewById(android.R.id.content),
-                            "Listening Mode Successfully Disabled! ", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                    // clear input fields
-                    deviceIdInput.getText().clear();
-                    devicePasswordInput.getText().clear();
+            // Snackbar to indicate connection status : success
+            if (channel.isClosed()) {
+                Snackbar.make(findViewById(android.R.id.content),
+                        "Listening Mode Successfully Disabled! ", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                // clear input fields
+                deviceIdInput.getText().clear();
+                devicePasswordInput.getText().clear();
 
                 }
         }
