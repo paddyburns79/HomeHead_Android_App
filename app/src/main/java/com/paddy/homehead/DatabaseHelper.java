@@ -20,9 +20,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String createTable = "CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        String createDBTable = "CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 " ITEM1 TEXT)";
-        sqLiteDatabase.execSQL(createTable);
+        sqLiteDatabase.execSQL(createDBTable);
 
     }
 
@@ -45,11 +45,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return
      */
     public boolean addData(String msgBody) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase notificationsDB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(NOTIFICATION_DATA, msgBody);
 
-        long result = db.insert(TABLE_NAME, null, contentValues);
+        long result = notificationsDB.insert(TABLE_NAME, null, contentValues);
 
         //if data is inserted incorrectly it will return -1
         if (result == -1) {
@@ -64,8 +64,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return
      */
     public Cursor getListContents(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        // instance of DB
+        SQLiteDatabase notificationsDB = this.getWritableDatabase();
+        // selection query to output stored data by descending order (i.e. most recent first)
+        Cursor data = notificationsDB.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY "+ MSG_ID+" DESC", null);
         return data;
     }
 }

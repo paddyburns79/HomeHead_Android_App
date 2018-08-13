@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class NotificationsReceivedActivity extends AppCompatActivity {
+public class ViewNotificationsReceivedActivity extends AppCompatActivity {
 
     DatabaseHelper notificationsDB;
 
@@ -24,15 +24,19 @@ public class NotificationsReceivedActivity extends AppCompatActivity {
         notificationsDB = new DatabaseHelper(this);
 
         //populate an ArrayList<String> from the database
-        ArrayList<String> theList = new ArrayList<>();
+        ArrayList<String> msgsReceivedArrayList = new ArrayList<>();
         // get contents
         Cursor data = notificationsDB.getListContents();
         if(data.getCount() == 0){
             Toast.makeText(this, "There are no contents in this list!",Toast.LENGTH_LONG).show();
         }else{
             while(data.moveToNext()){
-                theList.add(data.getString(1));
-                ListAdapter listAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,theList);
+                // outputs Auto Incremented ID Value
+                //msgsReceivedArrayList.add((data.getString(0)));
+                // outputs message body
+                msgsReceivedArrayList.add(data.getString(1));
+
+                ListAdapter listAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,msgsReceivedArrayList);
                 listView.setAdapter(listAdapter);
             }
         }
