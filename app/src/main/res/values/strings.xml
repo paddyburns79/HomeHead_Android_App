@@ -132,4 +132,7 @@
     <string name="delete_specific_noise">Delete Specific Noise</string>
     <string name="press_button_below_to_delete_all_stored_noises">Press Button Below to Delete ALL STORED NOISES</string>
     <string name="delete_all_stored_noises">Delete ALL Stored Noises</string>
+    <string name="view_notifications_received">Notifications Received</string>
+    <string name="notifications_received_icon">notifications_received_icon</string>
+    <string name="notifications_received">Notifications Received</string>
 </resources>

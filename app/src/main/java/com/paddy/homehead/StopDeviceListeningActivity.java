@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -22,7 +23,6 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
 
     // Input values for each inout field
     EditText deviceIdInput;
-    EditText ipAddressInput;
     EditText devicePasswordInput;
 
     @Override
@@ -39,9 +39,15 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
             //start execution of ssh commands
             @Override
             public void onClick(View v){
-                // retrieval of input field data on button click
-                deviceId = deviceIdInput.getText().toString();
-                devicePassword = devicePasswordInput.getText().toString();
+                if ((deviceIdInput.length()==0) || (devicePasswordInput.length()==0)) {
+                    // messsage to highlight empty fields
+                    Toast.makeText(StopDeviceListeningActivity.this, "Text Field Empty!", Toast.LENGTH_LONG).show();
+                } else {
+                    // retrieval of input field data on button click
+                    deviceId = deviceIdInput.getText().toString();
+                    devicePassword = devicePasswordInput.getText().toString();
+                }
+
 
                 // Accessing SharedPreferences Data (Stored Device RBP IP Address)
                 SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);

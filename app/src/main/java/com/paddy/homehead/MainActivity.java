@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //
+
         // set onclick listener for Enable Listening Button (nav to activity)
         ImageButton btnStart = findViewById(R.id.mainmenu_start_listening_imgbtn);
         btnStart.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +53,16 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
 
+        // set onclick listener for Notifications Received Image Button (nav to activity)
+        ImageButton buttonMsgsReceived = findViewById(R.id.view_notifications_imgbtn);
+        buttonMsgsReceived.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent viewNotificationsReceivedIntent = new Intent(MainActivity.this, NotificationsReceivedActivity.class);
+                startActivity(viewNotificationsReceivedIntent);
+            }
+        });
+
         // set onclick listener for System Shutdown Image Button (nav to activity)
         ImageButton buttonShutdown = findViewById(R.id.buttonDeviceShutdown);
         buttonShutdown.setOnClickListener(new View.OnClickListener() {
@@ -60,10 +72,6 @@ public class MainActivity extends AppCompatActivity  {
                   startActivity(systemShutdownIntent);
               }
           });
-
-
-
-
     }
 
 
