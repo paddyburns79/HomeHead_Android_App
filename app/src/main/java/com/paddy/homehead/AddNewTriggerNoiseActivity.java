@@ -125,7 +125,6 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
             // Obtain command line output as String (via InputStream)
             final StringBuilder outputBuffer = new StringBuilder();
             StringBuilder errorBuffer = new StringBuilder();
-            InputStream inStream = channel.getInputStream();
             InputStream errStream = channel.getExtInputStream();
             // connect to channel
             channel.connect();
@@ -136,12 +135,6 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
             // Read command line output
             byte[] tmp = new byte[1024];
             while (true) {
-                while (inStream.available() > 0) {
-                    int i = inStream.read(tmp, 0, 1024);
-                    if (i < 0) break;
-                    outputBuffer.append(new String(tmp, 0, i));
-                    //Log.i(TAG_errStr, outputBuffer.toString());
-                }
                 while (errStream.available() > 0) {
                     int i = errStream.read(tmp, 0, 1024);
                     if (i < 0) break;
@@ -155,8 +148,9 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                                 .setAction("Action", null).show();
                     }
                 }
+
                 if (channel.isClosed()) {
-                    if ((inStream.available() > 0) || (errStream.available() > 0)) continue;
+                    if (errStream.available() > 0) continue;
                     System.out.println("exit-status: " + channel.getExitStatus());
                     break;
                 }
