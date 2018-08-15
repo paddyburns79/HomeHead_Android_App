@@ -130,76 +130,45 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
             InputStream errStream = channel.getExtInputStream();
             // connect to channel
             channel.connect();
-            String TAG_errStr = "hh_err_log2";
+
+            // debugging logs TAG strings
+            String TAG_errStr = "hh_err_log";
+            String TAG_errStr_exception = "hh_err_exce";
+            // command line output comparison String (to trigget notification)
             String cmdRecordMsg = "INFO:sopare.recorder:start endless recording";
 
+            // Reading command line output (from Raspberry Pi)
             BufferedReader reader = new BufferedReader(new InputStreamReader(errStream));
             StringBuilder out = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                out.append(line);   // add everything to StringBuilder
-                // output to log
+                // append output to StringBuilder
+                out.append(line);
+                // output to log (debugging)
                 Log.i(TAG_errStr, line);
-                // here you can have your logic of comparison.
+                // comparison statement to output message to start recording
                 if(line.equals(cmdRecordMsg)) {
-                    // Snackbar to indicate process has completed
+                    // Snackbar to prompt user
                     Snackbar.make(findViewById(android.R.id.content),
                             "Record Noise / Phrase", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
             }
+            // InputStream exception try/catch
             try {
                 Thread.sleep(1000);
             } catch (Exception ee) {
+                Log.e(TAG_errStr, TAG_errStr_exception);
             }
 
-
-        // Snackbar to indicate process has completed
-        Snackbar.make(findViewById(android.R.id.content),
-                "Recording Completed", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
-        // Disconnect channel
-        channel.disconnect();
-
-
-            /*// Setting log and command line message comparison strings
-            String TAG_errStr = "hh_err_log2";
-            String cmdRecordMsg = "INFO:sopare.recorder:start endless recording";
-            // Read command line output
-            byte[] tmp = new byte[1024];
-            while (true) {
-                while (errStream.available() > 0) {
-                    int i = errStream.read(tmp, 0, 1024);
-                    if (i < 0) break;
-                    errorBuffer.append(new String(tmp, 0, i));
-                    // output to log
-                    Log.i(TAG_errStr, errorBuffer.toString());
-                    // Snackbar to indicate process has completed
-                    if (errorBuffer.toString().contains(cmdRecordMsg)) {
-                        Snackbar.make(findViewById(android.R.id.content),
-                                "Record Noise / Phrase", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-                }
-                if (channel.isClosed()) {
-                    if (errStream.available() > 0) continue;
-                    System.out.println("exit-status: " + channel.getExitStatus());
-                    break;
-                }
-
-                try {
-                    Thread.sleep(1000);
-                } catch (Exception ee) {
-                }
-
-            }
             // Snackbar to indicate process has completed
             Snackbar.make(findViewById(android.R.id.content),
                     "Recording Completed", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             // Disconnect channel
-            channel.disconnect();*/
+            channel.disconnect();
 
+        // SSH channel catch
         } catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
@@ -273,49 +242,5 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
         shutdownConfirm.show();
 
     }
-
-
-
-
-    /**
-     * Method to execute a command to train a new noise via SSH connection
-     */
-    /*public void executeSSHCommandAddNoise(){
-        String user = deviceId;
-        String password = devicePassword;
-        String host = ipAddress;
-        int port=22;
-        try{
-
-            JSch jsch = new JSch();
-            Session session = jsch.getSession(user, host, port);
-            session.setPassword(password);
-            session.setConfig("StrictHostKeyChecking", "no");
-            session.setTimeout(10000);
-            session.connect();
-            ChannelExec channel = (ChannelExec)session.openChannel("exec");
-            channel.setCommand("cd sopare; ./sopare.py -v -t "+noiseDescription);
-            channel.connect();
-            // output if channel successfully opened
-            while (!channel.isClosed()) {
-                // Snackbar to prompt user to play noise / speak
-                Snackbar.make(findViewById(android.R.id.content),
-                        "Recording : Play Noise / Speak Phrase", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-            // Snackbar to confirm recording has stopped
-            Snackbar.make(findViewById(android.R.id.content),
-                    "Recording Completed", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        }
-        catch(JSchException e){
-            // Snackbar to indicate connection status (failure) and show the error in the UI
-            Snackbar.make(findViewById(android.R.id.content),
-                    "Error. Check details entered, your internet connection, or if device has been shut down",
-                    Snackbar.LENGTH_LONG)
-                    .setDuration(20000).setAction("Action", null).show();
-        }
-    }*/
-
 
 }
