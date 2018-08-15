@@ -71,8 +71,13 @@ public class AddEditIPAddressActivity extends AppCompatActivity {
         // Accessing SharedPreferences Data (Stored Device RBP IP Address)
         SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
         String rbpIpAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
-        ipAddressView.setText(rbpIpAddress);
-        savedIpAddress = rbpIpAddress;
+        if (rbpIpAddress.isEmpty()) {
+            ipAddressView.setText("No IP Address Added");
+        } else {
+            ipAddressView.setText(rbpIpAddress);
+            savedIpAddress = rbpIpAddress;
+        }
+
 
     }
 

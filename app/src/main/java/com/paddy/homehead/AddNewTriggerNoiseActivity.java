@@ -148,7 +148,6 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                                 .setAction("Action", null).show();
                     }
                 }
-
                 if (channel.isClosed()) {
                     if (errStream.available() > 0) continue;
                     System.out.println("exit-status: " + channel.getExitStatus());
