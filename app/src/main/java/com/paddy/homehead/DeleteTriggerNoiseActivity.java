@@ -235,10 +235,7 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                     .setAction("Action", null).show();
             // Disconnect channel
             channel.disconnect();
-            // clear input fields
-            deviceIdInput.getText().clear();
-            devicePasswordInput.getText().clear();
-            noiseToDeleteInput.getText().clear();
+
         }
 
         catch(JSchException e){

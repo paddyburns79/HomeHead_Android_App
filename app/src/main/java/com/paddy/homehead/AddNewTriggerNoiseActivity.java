@@ -16,7 +16,10 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 public class AddNewTriggerNoiseActivity extends AppCompatActivity {
@@ -123,13 +126,43 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
             // Execute command
             channel.setCommand("cd sopare; ./sopare.py -v -t " + noiseDescription);
             // Obtain command line output as String (via InputStream)
-            final StringBuilder outputBuffer = new StringBuilder();
             StringBuilder errorBuffer = new StringBuilder();
             InputStream errStream = channel.getExtInputStream();
             // connect to channel
             channel.connect();
+            String TAG_errStr = "hh_err_log2";
+            String cmdRecordMsg = "INFO:sopare.recorder:start endless recording";
 
-            // Setting log and command line message comparison strings
+            BufferedReader reader = new BufferedReader(new InputStreamReader(errStream));
+            StringBuilder out = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                out.append(line);   // add everything to StringBuilder
+                // output to log
+                Log.i(TAG_errStr, line);
+                // here you can have your logic of comparison.
+                if(line.equals(cmdRecordMsg)) {
+                    // Snackbar to indicate process has completed
+                    Snackbar.make(findViewById(android.R.id.content),
+                            "Record Noise / Phrase", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (Exception ee) {
+            }
+
+
+        // Snackbar to indicate process has completed
+        Snackbar.make(findViewById(android.R.id.content),
+                "Recording Completed", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+        // Disconnect channel
+        channel.disconnect();
+
+
+            /*// Setting log and command line message comparison strings
             String TAG_errStr = "hh_err_log2";
             String cmdRecordMsg = "INFO:sopare.recorder:start endless recording";
             // Read command line output
@@ -165,7 +198,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                     "Recording Completed", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             // Disconnect channel
-            channel.disconnect();
+            channel.disconnect();*/
 
         } catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
