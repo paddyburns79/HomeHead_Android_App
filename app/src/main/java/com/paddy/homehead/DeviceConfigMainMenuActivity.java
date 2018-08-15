@@ -19,7 +19,7 @@ public class DeviceConfigMainMenuActivity extends AppCompatActivity {
         btnAddEditIPAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent addEditIPAddIntent = new Intent(DeviceConfigMainMenuActivity.this, AddEditIPAddressActivity.class);
+                Intent addEditIPAddIntent = new Intent(DeviceConfigMainMenuActivity.this, AddEditIPAddressDeviceIDActivity.class);
                 startActivity(addEditIPAddIntent);
             }
         });
