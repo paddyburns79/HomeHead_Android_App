@@ -3,6 +3,7 @@
     package="com.paddy.homehead">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -49,7 +50,9 @@
         <activity android:name=".DeviceConfigMainMenuActivity" />
         <activity android:name=".AddEditIPAddressActivity" />
         <activity android:name=".CalibrateDeviceNoiseThresholdActivity" />
-        <activity android:name=".AddNewTriggerNoiseActivity"></activity>
+        <activity android:name=".AddNewTriggerNoiseActivity" />
+        <activity android:name=".DeleteTriggerNoiseActivity" />
+        <activity android:name=".ViewNotificationsReceivedActivity"></activity>
     </application>
 
 </manifest>

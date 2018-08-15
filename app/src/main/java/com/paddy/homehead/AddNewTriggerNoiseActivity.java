@@ -12,19 +12,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
-
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.Properties;
 
 public class AddNewTriggerNoiseActivity extends AppCompatActivity {
@@ -104,66 +99,103 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                 }.execute(1);
             }
         });
-
     }
 
     /**
      * Method to execute a command to train a new noise via SSH connection
+     * @throws Exception
      */
-    /*public void executeSSHCommandAddNoise(){
-        String user = deviceId;
-        String password = devicePassword;
-        String host = ipAddress;
+    public void executeSSHCommandAddNoise() throws Exception {
         int port=22;
-        try{
 
+        try {
+            // Set SSH Session and Parameters
             JSch jsch = new JSch();
-            Session session = jsch.getSession(user, host, port);
-            session.setPassword(password);
-            session.setConfig("StrictHostKeyChecking", "no");
-            session.setTimeout(10000);
+            Session session = jsch.getSession(deviceId, ipAddress, port);
+            session.setPassword(devicePassword);
+
+            // Avoid asking for key confirmation
+            Properties prop = new Properties();
+            prop.put("StrictHostKeyChecking", "no");
+            session.setConfig(prop);
+
             session.connect();
-            ChannelExec channel = (ChannelExec)session.openChannel("exec");
-            channel.setCommand("cd sopare; ./sopare.py -v -t "+noiseDescription);
+
+            // SSH Channel
+            ChannelExec channel = (ChannelExec) session.openChannel("exec");
+            // Execute command
+            channel.setCommand("cd sopare; ./sopare.py -v -t " + noiseDescription);
+            // Obtain command line output as String (via InputStream)
+            StringBuilder errorBuffer = new StringBuilder();
+            InputStream errStream = channel.getExtInputStream();
+            // connect to channel
             channel.connect();
-            // output if channel successfully opened
-            while (!channel.isClosed()) {
-                // Snackbar to prompt user to play noise / speak
-                Snackbar.make(findViewById(android.R.id.content),
-                        "Recording : Play Noise / Speak Phrase", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+            // debugging logs TAG strings
+            String TAG_errStr = "hh_err_log";
+            String TAG_errStr_exception = "hh_err_exce";
+            // command line output comparison String (to trigget notification)
+            String cmdRecordMsg = "INFO:sopare.recorder:start endless recording";
+
+            // Reading command line output (from Raspberry Pi)
+            BufferedReader reader = new BufferedReader(new InputStreamReader(errStream));
+            StringBuilder out = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // append output to StringBuilder
+                out.append(line);
+                // output to log (debugging)
+                Log.i(TAG_errStr, line);
+                // comparison statement to output message to start recording
+                if(line.equals(cmdRecordMsg)) {
+                    // Snackbar to prompt user
+                    Snackbar.make(findViewById(android.R.id.content),
+                            "Record Noise / Phrase", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
-            // Snackbar to confirm recording has stopped
+            // InputStream exception try/catch
+            try {
+                Thread.sleep(1000);
+            } catch (Exception ee) {
+                Log.e(TAG_errStr, TAG_errStr_exception);
+            }
+
+            // Snackbar to indicate process has completed
             Snackbar.make(findViewById(android.R.id.content),
                     "Recording Completed", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-        }
-        catch(JSchException e){
+            // Disconnect channel
+            channel.disconnect();
+
+        // SSH channel catch
+        } catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
                     "Error. Check details entered, your internet connection, or if device has been shut down",
                     Snackbar.LENGTH_LONG)
                     .setDuration(20000).setAction("Action", null).show();
         }
-    }*/
+    }
 
     /**
      * Method to execute a command to save new noise to device dictionary via SSH connection
      */
     public void executeSSHCommandSaveNoiseToDictionary(){
-        String user = deviceId;
-        String password = devicePassword;
-        String host = ipAddress;
         int port=22;
         try{
-
+            // Set SSH Session and Parameters
             JSch jsch = new JSch();
-            Session session = jsch.getSession(user, host, port);
-            session.setPassword(password);
+            Session session = jsch.getSession(deviceId, ipAddress, port);
+            session.setPassword(devicePassword);
+            // Avoid asking for key confirmation
             session.setConfig("StrictHostKeyChecking", "no");
             session.setTimeout(10000);
+            // Connect Session
             session.connect();
+            //  Create SSH channel
             ChannelExec channel = (ChannelExec)session.openChannel("exec");
+            // Execute command
             channel.setCommand("cd sopare; ./sopare.py -c");
             channel.connect();
             // output if channel successfully opened
@@ -172,10 +204,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(android.R.id.content),
                         "Noise Successfully Saved to Dictionary", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                /*// clear input fields
-                devicePasswordInput.getText().clear();
-                deviceIdInput.getText().clear();
-                noiseDescriptionInput.getText().clear();*/
+
                 // Disconnect channel
                 channel.disconnect();
             }
@@ -188,88 +217,6 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                     .setDuration(20000).setAction("Action", null).show();
         }
     }
-
-
-    /**
-     * Method to execute a command to train a new noise via SSH connection
-     * @throws Exception
-     */
-    public void executeSSHCommandAddNoise() throws Exception {
-        String user = deviceId;
-        String password = devicePassword;
-        String host = ipAddress;
-
-        int port=22;
-
-        JSch jsch = new JSch();
-        Session session = jsch.getSession(user, host, port);
-        session.setPassword(password);
-
-        // Avoid asking for key confirmation
-        Properties prop = new Properties();
-        prop.put("StrictHostKeyChecking", "no");
-        session.setConfig(prop);
-
-        session.connect();
-
-        // SSH Channel
-        ChannelExec channel = (ChannelExec) session.openChannel("exec");
-        // Execute command
-        channel.setCommand("cd sopare; ./sopare.py -v -t "+noiseDescription);
-
-        final StringBuilder outputBuffer = new StringBuilder();
-        StringBuilder errorBuffer = new StringBuilder();
-
-        InputStream inStream = channel.getInputStream();
-        //BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        InputStream errStream = channel.getExtInputStream();
-
-        channel.connect();
-
-        String TAG_errStr = "hh_err_log2";
-        String cmdRecordMsg = "INFO:sopare.recorder:start endless recording";
-
-        byte[] tmp = new byte[1024];
-        while (true) {
-            while (inStream.available() > 0) {
-                int i = inStream.read(tmp, 0, 1024);
-                if (i < 0) break;
-                outputBuffer.append(new String(tmp, 0, i));
-                //Log.i(TAG_errStr, outputBuffer.toString());
-            }
-            while (errStream.available() > 0) {
-                int i = errStream.read(tmp, 0, 1024);
-                if (i < 0) break;
-                errorBuffer.append(new String(tmp, 0, i));
-                Log.i(TAG_errStr, errorBuffer.toString());
-                //System.out.println("Log Pat :" +errorBuffer.toString());
-                // Snackbar to indicate process has completed
-                if (errorBuffer.toString().contains(cmdRecordMsg)) {
-                    Snackbar.make(findViewById(android.R.id.content),
-                            "Start Recording Noise / Phrase", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            }
-            if (channel.isClosed()) {
-                if ((inStream.available() > 0) || (errStream.available() > 0)) continue;
-                System.out.println("exit-status: " + channel.getExitStatus());
-                break;
-            }
-
-            try {
-                Thread.sleep(1000);
-            } catch (Exception ee) {
-            }
-
-        }
-        // Snackbar to indicate process has completed
-        Snackbar.make(findViewById(android.R.id.content),
-                "Recording Completed", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
-        // Disconnect channel
-        channel.disconnect();
-    }
-
 
     /**
      * Method to display tooltip (Info on adding a new trigger noise) on image button click
@@ -295,6 +242,5 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
         shutdownConfirm.show();
 
     }
-
 
 }

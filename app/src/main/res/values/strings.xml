@@ -123,4 +123,16 @@
     <string name="record_noise_phrase">Record Noise/Phrase</string>
     <string name="save_to_dictionary">Save to Dictionary</string>
     <string name="add_noise_tooltip_icon">add_noise_tooltip_icon</string>
+    <string name="start_listening_icon">start_listening_icon</string>
+    <string name="disable_listening_icon">disable_listening_icon</string>
+    <string name="delete_saved_trigger_noises">Delete Saved Trigger Noises</string>
+    <string name="delete_a_stored_trigger_noise">Delete Trigger Noise(s)</string>
+    <string name="to_delete_a_specific_noise_enter_the_name_below">To delete a specific noise, enter the name below :</string>
+    <string name="name_of_noise_to_delete">Name of Noise to Delete</string>
+    <string name="delete_specific_noise">Delete Specific Noise</string>
+    <string name="press_button_below_to_delete_all_stored_noises">Press Button Below to Delete ALL STORED NOISES</string>
+    <string name="delete_all_stored_noises">Delete ALL Stored Noises</string>
+    <string name="view_notifications_received">Notifications Received</string>
+    <string name="notifications_received_icon">notifications_received_icon</string>
+    <string name="notifications_received">Notifications Received</string>
 </resources>

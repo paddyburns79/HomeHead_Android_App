@@ -43,5 +43,15 @@ public class DeviceConfigMainMenuActivity extends AppCompatActivity {
                 startActivity(calibrateNoiseIntent);
             }
         });
+
+        // set onclick listener for Delete Saved Trigger Noises Button (nav to activity)
+        Button btnDeleteSavedNoises = findViewById(R.id.button_delete_trigger_noise);
+        btnDeleteSavedNoises.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent deleteSavedNoisesIntent = new Intent(DeviceConfigMainMenuActivity.this, DeleteTriggerNoiseActivity.class);
+                startActivity(deleteSavedNoisesIntent);
+            }
+        });
     }
 }

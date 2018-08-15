@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity  {
@@ -19,8 +18,10 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //
+
         // set onclick listener for Enable Listening Button (nav to activity)
-        Button btnStart = findViewById(R.id.button_start_listen_activity);
+        ImageButton btnStart = findViewById(R.id.mainmenu_start_listening_imgbtn);
         btnStart.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity  {
         });
 
         // set onclick listener for Disable Listening Button (nav to activity)
-        Button btnStop = findViewById(R.id.button_stop_listen_activity);
+        ImageButton btnStop = findViewById(R.id.mainmenu_disable_listening_imgbtn);
         btnStop.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -51,6 +52,16 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
 
+        // set onclick listener for Notifications Received Image Button (nav to activity)
+        ImageButton buttonMsgsReceived = findViewById(R.id.view_notifications_imgbtn);
+        buttonMsgsReceived.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent viewNotificationsReceivedIntent = new Intent(MainActivity.this, ViewNotificationsReceivedActivity.class);
+                startActivity(viewNotificationsReceivedIntent);
+            }
+        });
+
         // set onclick listener for System Shutdown Image Button (nav to activity)
         ImageButton buttonShutdown = findViewById(R.id.buttonDeviceShutdown);
         buttonShutdown.setOnClickListener(new View.OnClickListener() {
@@ -60,10 +71,6 @@ public class MainActivity extends AppCompatActivity  {
                   startActivity(systemShutdownIntent);
               }
           });
-
-
-
-
     }
 
 

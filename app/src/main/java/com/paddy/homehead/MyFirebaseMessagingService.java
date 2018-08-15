@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
@@ -29,9 +30,11 @@ import java.util.Map;
 public class MyFirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
     private static final String TAG = "FirebaseMessagingServic";
-
+    // initialise instance of Firebase Firestore
     FirebaseFirestore dBase = FirebaseFirestore.getInstance();
 
+    // inititalise instance of DatabaseHelper
+    DatabaseHelper notificationsDB;
 
     public MyFirebaseMessagingService(FirebaseFirestore dBase) {
         this.dBase = dBase;
@@ -51,16 +54,17 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
      @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-         Map<String, String> data = remoteMessage.getData();
-
          // retrieve message data
+         Map<String, String> data = remoteMessage.getData();
          String title = data.get("title");
          String messageBody = data.get("body");
 
          // forward notification data to sendNotification method if areHeadphonesConnected value = true
          if (areHeadphonesConnected()) {
             sendNotification(title, messageBody);
-
+            // add message data to SQLite database
+            notificationsDB = new DatabaseHelper(this);
+            addMsgDataToDB(messageBody);
          }
     }
 
@@ -72,7 +76,7 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
      */
     private void sendNotification(String title, String messageBody) {
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, ViewNotificationsReceivedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
@@ -81,11 +85,15 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.mipmap.homehead_launcher)
+                        .setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
+                                R.mipmap.homehead_launcher))
                         .setContentTitle(title)
                         .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
+                        .setPriority(2)
+                        .setVibrate(new long[1000])
                         .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =
@@ -95,7 +103,7 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId,
                     "Channel human readable title",
-                    NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager.IMPORTANCE_HIGH);
             notificationManager.createNotificationChannel(channel);
         }
 
@@ -141,7 +149,6 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
         Map<String, Object> deviceData = new HashMap<>();
         deviceData.put("tokenID", token);
         deviceData.put("deviceName", deviceMod);
-        deviceData.put("location", "76LadyWallaceRoadBT283WS");
         // areHeadphonesConnected method check
         //deviceData.put("headphonesConnected", areHeadphonesConnected());
 
@@ -171,8 +178,9 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
         return false;
     }
 
+    public void addMsgDataToDB(String msgBodyToDB) {
 
+        boolean insertData = notificationsDB.addData(msgBodyToDB);
 
-
-
+    }
 }
