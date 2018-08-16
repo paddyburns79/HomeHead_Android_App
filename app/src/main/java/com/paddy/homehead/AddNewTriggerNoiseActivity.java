@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -25,10 +27,9 @@ import java.util.Properties;
 public class AddNewTriggerNoiseActivity extends AppCompatActivity {
 
     // Strings to accept user input data
-    String noiseDescription, deviceId, ipAddress, devicePassword;
+    String noiseDescription,ipAddress, deviceId, devicePassword;
 
     // Input values to hold input field data
-    EditText deviceIdInput;
     EditText devicePasswordInput;
     EditText noiseDescriptionInput;
 
@@ -37,10 +38,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_trigger_noise);
 
-       //final String TAG = "TESTING";
-
         // linking input values to each input field
-        deviceIdInput = (EditText) findViewById(R.id.calibrate_device_deviceID_textbox);
         devicePasswordInput = (EditText) findViewById(R.id.calibrate_device_device_PW_textbox);
         noiseDescriptionInput = (EditText) findViewById(R.id.add_noise_name_textbox);
 
@@ -49,26 +47,44 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
             //start execution of ssh commands
             @Override
             public void onClick(View v){
-                // retrieval of input field data on button click
-                deviceId = deviceIdInput.getText().toString();
-                devicePassword = devicePasswordInput.getText().toString();
-                noiseDescription = noiseDescriptionInput.getText().toString();
+                // check if both fields are empty
+                if ((devicePasswordInput.length() == 0) && (noiseDescriptionInput.length()== 0)) {
+                    // messsage to highlight empty fields
+                    Toast.makeText(AddNewTriggerNoiseActivity.this, "No password or noise description entered!", Toast.LENGTH_LONG).show();
+                // check if text has been entered in the password field
+                } else if (devicePasswordInput.length() == 0) {
+                    // messsage to highlight empty password field
+                    Toast.makeText(AddNewTriggerNoiseActivity.this, "No password entered!", Toast.LENGTH_LONG).show();
+                // check if text has been entered in the 'noise description' field
+                } else if (noiseDescriptionInput.length()== 0) {
+                    // messsage to highlight empty 'noise description' field
+                    Toast.makeText(AddNewTriggerNoiseActivity.this, "'Noise Description' field is empty!", Toast.LENGTH_LONG).show();
+                // action of all fields are completed
+                } else {
+                    // retrieval of input field data on button click
+                    devicePassword = devicePasswordInput.getText().toString();
+                    noiseDescription = noiseDescriptionInput.getText().toString();
 
-                // Accessing SharedPreferences Data (Stored Device RBP IP Address)
-                SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
-                ipAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
+                    // Accessing SharedPreferences Data (Stored Device RBP IP Address)
+                    SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
+                    ipAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
 
-                new AsyncTask<Integer, Void, Void>(){
-                    @Override
-                    protected Void doInBackground(Integer... params) {
-                        try {
-                            executeSSHCommandAddNoise();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                    // Accessing SharedPreferences Data (Stored Device ID)
+                    SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
+                    deviceId = deviceIDSharedPref.getString("rbp_device_id", "");
+
+                    new AsyncTask<Integer, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Integer... params) {
+                            try {
+                                executeSSHCommandAddNoise();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            return null;
                         }
-                        return null;
-                    }
-                }.execute(1);
+                    }.execute(1);
+                }
             }
         });
 
@@ -78,25 +94,34 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
             //start execution of ssh commands
             @Override
             public void onClick(View v){
-                // retrieval of input field data on button click
-                deviceId = deviceIdInput.getText().toString();
-                devicePassword = devicePasswordInput.getText().toString();
+                // check if text has been entered in the password field
+                if (devicePasswordInput.length() == 0) {
+                    // messsage to highlight empty password field
+                    Toast.makeText(AddNewTriggerNoiseActivity.this, "No password entered!", Toast.LENGTH_LONG).show();
+                } else {
+                    // retrieval of input field data on button click
+                    devicePassword = devicePasswordInput.getText().toString();
 
-                // Accessing SharedPreferences Data (Stored Device RBP IP Address)
-                SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
-                ipAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
+                    // Accessing SharedPreferences Data (Stored Device RBP IP Address)
+                    SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
+                    ipAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
 
-                new AsyncTask<Integer, Void, Void>(){
-                    @Override
-                    protected Void doInBackground(Integer... params) {
-                        try {
-                            executeSSHCommandSaveNoiseToDictionary();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                    // Accessing SharedPreferences Data (Stored Device ID)
+                    SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
+                    deviceId = deviceIDSharedPref.getString("rbp_device_id", "");
+
+                    new AsyncTask<Integer, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Integer... params) {
+                            try {
+                                executeSSHCommandSaveNoiseToDictionary();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            return null;
                         }
-                        return null;
-                    }
-                }.execute(1);
+                    }.execute(1);
+                }
             }
         });
     }

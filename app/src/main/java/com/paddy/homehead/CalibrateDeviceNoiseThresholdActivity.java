@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.common.util.IOUtils;
 import com.jcraft.jsch.Channel;
@@ -36,7 +37,6 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
     int configCycles = 1;
 
     // Input values to hold input field data
-    EditText deviceIdInput;
     EditText devicePasswordInput;
 
     @Override
@@ -45,33 +45,40 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
         setContentView(R.layout.activity_calibrate_device_noise_threshold);
 
         // linking input values to each input field
-        deviceIdInput = (EditText) findViewById(R.id.calibrate_device_deviceID_textbox);
         devicePasswordInput = (EditText) findViewById(R.id.calibrate_device_device_PW_textbox);
 
         Button btnStart = findViewById(R.id.button_calibrate_device);
         btnStart.setOnClickListener(new View.OnClickListener() {
-            //start execution of ssh commands
             @Override
             public void onClick(View v){
-                // retrieval of input field data on button click
-                deviceId = deviceIdInput.getText().toString();
-                devicePassword = devicePasswordInput.getText().toString();
+                // check if text has been entered in the password field
+                if (devicePasswordInput.length() == 0) {
+                    // messsage to highlight empty field
+                    Toast.makeText(CalibrateDeviceNoiseThresholdActivity.this, "No password entered!", Toast.LENGTH_LONG).show();
+                } else {
+                    // retrieval of input field data on button click
+                    devicePassword = devicePasswordInput.getText().toString();
 
-                // Accessing SharedPreferences Data (Stored Device RBP IP Address)
-                SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
-                ipAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
+                    // Accessing SharedPreferences Data (Stored Device RBP IP Address)
+                    SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
+                    ipAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
 
-                new AsyncTask<Integer, Void, Void>(){
-                    @Override
-                    protected Void doInBackground(Integer... params) {
-                        try {
-                            executeSSHCommandCalibrateDevice();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                    // Accessing SharedPreferences Data (Stored Device ID)
+                    SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
+                    deviceId = deviceIDSharedPref.getString("rbp_device_id", "");
+                    // call method to execute SSH Command
+                    new AsyncTask<Integer, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Integer... params) {
+                            try {
+                                executeSSHCommandCalibrateDevice();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            return null;
                         }
-                        return null;
-                    }
-                }.execute(1);
+                    }.execute(1);
+                }
             }
         });
     }
@@ -111,8 +118,7 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
                     .setDuration(20000).setAction("Action", null).show();
             // Disconnect channel
             channel.disconnect();
-            // clear input fields
-            deviceIdInput.getText().clear();
+            // clear input field
             devicePasswordInput.getText().clear();
 
         }

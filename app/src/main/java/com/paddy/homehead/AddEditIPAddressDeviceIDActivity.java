@@ -45,6 +45,10 @@ public class AddEditIPAddressDeviceIDActivity extends AppCompatActivity {
     if (ipAddressInput.getText().toString().equalsIgnoreCase(savedIpAddress)) {
         // Toast popup to confirm IP Address entered matches that already saved
         Toast.makeText(this, "IP Address Entered Already Saved", Toast.LENGTH_LONG).show();
+    // checking text has been entered in the input field
+    } else if (ipAddressInput.length() ==0) {
+        // messsage to highlight empty field
+        Toast.makeText(AddEditIPAddressDeviceIDActivity.this, "No IP Address entered!", Toast.LENGTH_LONG).show();
     } else {
         // setting Shared Preferences file (Mode Private so only this app can access it)
         SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
@@ -72,6 +76,10 @@ public class AddEditIPAddressDeviceIDActivity extends AppCompatActivity {
         if (deviceIDInput.getText().toString().equalsIgnoreCase(savedDeviceID)) {
             // Toast popup to confirm IP Address entered matches that already saved
             Toast.makeText(this, "Device ID Entered Already Saved", Toast.LENGTH_LONG).show();
+            // checking text has been entered in the input field
+        } else if (deviceIDInput.length() ==0) {
+            // messsage to highlight empty field
+            Toast.makeText(AddEditIPAddressDeviceIDActivity.this, "No Device ID entered!", Toast.LENGTH_LONG).show();
         } else {
             // setting Shared Preferences file (Mode Private so only this app can access it)
             SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);

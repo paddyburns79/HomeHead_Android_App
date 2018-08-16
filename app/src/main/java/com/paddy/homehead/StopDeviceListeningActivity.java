@@ -22,7 +22,6 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
     String deviceId, ipAddress, devicePassword;
 
     // Input values for each inout field
-    EditText deviceIdInput;
     EditText devicePasswordInput;
 
     @Override
@@ -31,39 +30,41 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stop_device_listening);
 
         // linking input values to each input field
-        deviceIdInput = (EditText) findViewById(R.id.start_device_deviceID_textbox);
         devicePasswordInput = (EditText) findViewById(R.id.start_device_Device_PW_textbox);
 
         Button btnStop = findViewById(R.id.button_stop_listen);
         btnStop.setOnClickListener(new View.OnClickListener() {
             //start execution of ssh commands
             @Override
-            public void onClick(View v){
-                if ((deviceIdInput.length()==0) || (devicePasswordInput.length()==0)) {
+            public void onClick(View v) {
+                // check if text has been entered in the password field
+                if (devicePasswordInput.length() == 0) {
                     // messsage to highlight empty fields
-                    Toast.makeText(StopDeviceListeningActivity.this, "Text Field Empty!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(StopDeviceListeningActivity.this, "No password entered!", Toast.LENGTH_LONG).show();
                 } else {
                     // retrieval of input field data on button click
-                    deviceId = deviceIdInput.getText().toString();
                     devicePassword = devicePasswordInput.getText().toString();
-                }
 
+                    // Accessing SharedPreferences Data (Stored Device RBP IP Address)
+                    SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
+                    ipAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
 
-                // Accessing SharedPreferences Data (Stored Device RBP IP Address)
-                SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
-                ipAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
+                    // Accessing SharedPreferences Data (Stored Device ID)
+                    SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
+                    deviceId = deviceIDSharedPref.getString("rbp_device_id", "");
 
-                new AsyncTask<Integer, Void, Void>(){
-                    @Override
-                    protected Void doInBackground(Integer... params) {
-                        try {
-                            executeSSHcommandStopListening();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                    new AsyncTask<Integer, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Integer... params) {
+                            try {
+                                executeSSHcommandStopListening();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            return null;
                         }
-                        return null;
-                    }
-                }.execute(1);
+                    }.execute(1);
+                }
             }
         });
     }
@@ -93,7 +94,6 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
                         "Listening Mode Successfully Disabled! ", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 // clear input fields
-                deviceIdInput.getText().clear();
                 devicePasswordInput.getText().clear();
 
                 }

@@ -83,7 +83,7 @@
     <string name="start_listening">Enable Device Listening</string>
     <string name="stop_listening">Disable Device Listening</string>
     <string name="enable_device_active_listening_mode">Enable Device Active Listening</string>
-    <string name="enter_device_info">Enter the Device ID and Password to Proceed :</string>
+    <string name="enter_device_info">Enter the Device Password to Proceed :</string>
     <string name="pi_device_id">Pi Device ID</string>
     <string name="enter_device_ip_address">Enter Device IP Address:</string>
     <string name="ip_address">IP Address</string>
@@ -143,4 +143,5 @@
     <string name="No_IP_Address">Add IP Address</string>
     <string name="no_device_id_added">Add Device ID</string>
     <string name="current_device_id_stored">Current Device ID Stored :</string>
+    <string name="to_add_device_id_ip_address_or_a_new_trigger_noise_or_to_calibrate_background_noise_levels_and_delete_stored_trigger_noises">Add device ID, IP Address, or new trigger noise; Calibrate background noise levels; Delete stored trigger noises.</string>
 </resources>
