@@ -17,6 +17,7 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.RemoteMessage;
@@ -53,6 +54,12 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
      */
      @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
+         // Cloud Firestore instance settings
+         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                 .setTimestampsInSnapshotsEnabled(true)
+                 .build();
+         dBase.setFirestoreSettings(settings);
 
          // retrieve message data
          Map<String, String> data = remoteMessage.getData();
@@ -104,9 +111,11 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
             NotificationChannel channel = new NotificationChannel(channelId,
                     "Channel human readable title",
                     NotificationManager.IMPORTANCE_HIGH);
+            assert notificationManager != null;
             notificationManager.createNotificationChannel(channel);
         }
 
+        assert notificationManager != null;
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
 
     }
