@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Objects;
+
 public class AddEditIPAddressDeviceIDActivity extends AppCompatActivity {
 
     String savedIpAddress, savedDeviceID;
@@ -25,6 +27,9 @@ public class AddEditIPAddressDeviceIDActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_ipaddress);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.homehead_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         // Calling method to display the current Device ID and IP Address SharedPreference stored values
         showDeviceIDData();

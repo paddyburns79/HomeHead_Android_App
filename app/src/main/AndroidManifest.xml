@@ -52,7 +52,7 @@
         <activity android:name=".CalibrateDeviceNoiseThresholdActivity" />
         <activity android:name=".AddNewTriggerNoiseActivity" />
         <activity android:name=".DeleteTriggerNoiseActivity" />
-        <activity android:name=".ViewNotificationsReceivedActivity"></activity>
+        <activity android:name=".ViewNotificationsReceivedActivity" />
     </application>
 
 </manifest>

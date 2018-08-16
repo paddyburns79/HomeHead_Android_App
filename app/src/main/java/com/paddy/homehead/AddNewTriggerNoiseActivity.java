@@ -22,6 +22,7 @@ import com.jcraft.jsch.Session;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Objects;
 import java.util.Properties;
 
 public class AddNewTriggerNoiseActivity extends AppCompatActivity {
@@ -37,6 +38,9 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_trigger_noise);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.homehead_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         // linking input values to each input field
         devicePasswordInput = (EditText) findViewById(R.id.calibrate_device_device_PW_textbox);

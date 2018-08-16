@@ -16,6 +16,8 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+import java.util.Objects;
+
 public class StopDeviceListeningActivity extends AppCompatActivity {
 
     // Strings to accept user input data
@@ -28,6 +30,9 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stop_device_listening);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.homehead_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         // linking input values to each input field
         devicePasswordInput = (EditText) findViewById(R.id.start_device_Device_PW_textbox);

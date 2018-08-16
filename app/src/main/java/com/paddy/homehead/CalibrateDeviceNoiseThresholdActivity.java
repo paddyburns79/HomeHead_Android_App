@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.StringWriter;
+import java.util.Objects;
 import java.util.Properties;
 
 public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
@@ -43,6 +44,10 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibrate_device_noise_threshold);
+        // set action bar with logo
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.homehead_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         // linking input values to each input field
         devicePasswordInput = (EditText) findViewById(R.id.calibrate_device_device_PW_textbox);

@@ -10,22 +10,27 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    lintOptions {
+        disable 'GoogleAppIndexingWarning' // Google indexing not required (app won't be published to PlayStore)
+        baseline file("lint-baseline.xml")
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
-    implementation 'com.android.support:appcompat-v7:28.0.0-beta01'
-    implementation 'com.android.support:animated-vector-drawable:28.0.0-beta01'
-    implementation 'com.android.support:support-media-compat:28.0.0-beta01'
+    implementation 'com.android.support:appcompat-v7:28.0.0-rc01'
+    implementation 'com.android.support:animated-vector-drawable:28.0.0-rc01'
+    implementation 'com.android.support:support-media-compat:28.0.0-rc01'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    implementation 'com.android.support:support-v4:28.0.0-beta01'
+    implementation 'com.android.support:support-v4:28.0.0-rc01'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -33,6 +38,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:17.1.0'
     implementation 'com.google.firebase:firebase-firestore:17.0.4'
     implementation 'com.jcraft:jsch:0.1.54'
-    implementation 'com.android.support:design:28.0.0-beta01'
+    implementation 'com.android.support:design:28.0.0-rc01'
 }
 apply plugin: 'com.google.gms.google-services'

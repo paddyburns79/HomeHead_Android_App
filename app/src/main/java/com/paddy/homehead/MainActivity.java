@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity  {
 
     public MainActivity() {
@@ -18,8 +20,9 @@ public class MainActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.homehead_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         // set onclick listener for Enable Listening Button (nav to activity)
         ImageButton btnStart = findViewById(R.id.mainmenu_start_listening_imgbtn);
