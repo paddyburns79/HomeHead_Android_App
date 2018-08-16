@@ -14,6 +14,7 @@ public class DeviceConfigMainMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_config_main_menu);
+        // add logo to action bar
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.mipmap.homehead_launcher);
         getSupportActionBar().setDisplayUseLogoEnabled(true);

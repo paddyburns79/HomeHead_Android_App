@@ -33,6 +33,7 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete_trigger_noise);
+        // add logo to action bar
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.mipmap.homehead_launcher);
         getSupportActionBar().setDisplayUseLogoEnabled(true);

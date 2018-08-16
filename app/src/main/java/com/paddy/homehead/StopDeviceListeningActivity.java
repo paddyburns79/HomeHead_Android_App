@@ -30,6 +30,7 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stop_device_listening);
+        // add logo to action bar
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.mipmap.homehead_launcher);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
