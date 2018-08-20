@@ -2,6 +2,7 @@ package com.paddy.homehead;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -28,7 +30,6 @@ import com.jcraft.jsch.Session;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -61,6 +62,16 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                 .build();
         noisesAddedDB.setFirestoreSettings(settings);
 
+        // set onclick listener for View Saved Noises (nav to activity)
+        Button btnViewSavedNoises = findViewById(R.id.view_saved_noises_button);
+        btnViewSavedNoises.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent viewSavedNoisesIntent = new Intent(AddNewTriggerNoiseActivity.this, ViewSavedNoisesActivity.class);
+                startActivity(viewSavedNoisesIntent);
+            }
+        });
+
         // linking input values to each input field
         devicePasswordInput = (EditText) findViewById(R.id.calibrate_device_device_PW_textbox);
         noiseDescriptionInput = (EditText) findViewById(R.id.add_noise_name_textbox);
@@ -85,8 +96,8 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                 // action of all fields are completed
                 } else {
                     // retrieval of input field data on button click
-                    devicePassword = devicePasswordInput.getText().toString();
-                    noiseDescription = noiseDescriptionInput.getText().toString();
+                    devicePassword = devicePasswordInput.getText().toString().trim();
+                    noiseDescription = noiseDescriptionInput.getText().toString().trim();
 
                     // Accessing SharedPreferences Data (Stored Device RBP IP Address)
                     SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
@@ -132,8 +143,8 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                     // action of all fields are completed
                 } else {
                     // retrieval of input field data on button click
-                    devicePassword = devicePasswordInput.getText().toString();
-                    noiseDescription = noiseDescriptionInput.getText().toString();
+                    devicePassword = devicePasswordInput.getText().toString().trim();
+                    noiseDescription = noiseDescriptionInput.getText().toString().trim();
 
                     // Accessing SharedPreferences Data (Stored Device RBP IP Address)
                     SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
@@ -265,8 +276,8 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
             // debugging logs TAG strings
             String TAG_errStrSaveNoise = "hh_err_log_save";
             String TAG_errStr_exceptionSaveNoise = "hh_err_exce_save";
-            final String TAG_firebase_success = "TAG_firebase_success";
-            final String TAG_firebase_failure = "TAG_firebase_failure";
+            final String TAG_firebase_add_success = "TAG_db_add_success";
+            final String TAG_firebase_add_failure = "TAG_db_read_failure";
             // command line output comparison String (to trigget notification)
             String cmdNoiseSavedMsg = "recreating dictionary from raw input files...";
 
@@ -291,7 +302,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                 @Override
                                 public void onSuccess(DocumentReference documentReference) {
-                                    Log.d(TAG_firebase_success, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                    Log.d(TAG_firebase_add_success, "DocumentSnapshot added with ID: " + documentReference.getId());
                                     // Snackbar to indicate noise successfully saved to dictionary
                                     Snackbar.make(findViewById(android.R.id.content),
                                             "Noise Successfully Saved to Dictionary and Database", Snackbar.LENGTH_LONG)
@@ -301,7 +312,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.w(TAG_firebase_failure, "Error adding document", e);// Snackbar to indicate noise successfully saved to dictionary
+                                    Log.w(TAG_firebase_add_failure, "Error adding document", e);// Snackbar to indicate noise successfully saved to dictionary
                                     Snackbar.make(findViewById(android.R.id.content),
                                             "Error adding noise to database", Snackbar.LENGTH_LONG)
                                             .setAction("Action", null).show();
@@ -336,21 +347,21 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
     public void displayNewNoiseTooltip(View view) {
 
         // set Alert Dialog box to confirm system shutdown
-        AlertDialog.Builder shutdownConfirm = new AlertDialog.Builder(AddNewTriggerNoiseActivity.this);
+        AlertDialog.Builder addNewNoiseToolTip = new AlertDialog.Builder(AddNewTriggerNoiseActivity.this);
         // allow alert dialog to be cancelled by clicking area outside of the box
-        shutdownConfirm.setCancelable(true);
+        addNewNoiseToolTip.setCancelable(true);
         // set messages
-        shutdownConfirm.setTitle("Adding New Trigger Noise");
-        shutdownConfirm.setMessage("To add a new trigger noise (i.e. speech or a consistent, repeatable sound) enter the required details, press record and follow the on-screen prompt.\n\nEach noise should be recorded at least 3 times before saving to the device dictionary.\n\nIf recording speech, record one word only.");
+        addNewNoiseToolTip.setTitle("Adding New Trigger Noise");
+        addNewNoiseToolTip.setMessage("To add a new trigger noise (i.e. speech or a consistent, repeatable sound) enter the required details, press record and follow the on-screen prompt.\n\nEach noise should be recorded at least 3 times before saving to the device dictionary.\n\nIf recording speech, record one word only.");
         // set negative 'cancel' button
-        shutdownConfirm.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+        addNewNoiseToolTip.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int whichButton) {
                 dialogInterface.cancel();
             }
         });
 
-        shutdownConfirm.show();
+        addNewNoiseToolTip.show();
 
     }
 

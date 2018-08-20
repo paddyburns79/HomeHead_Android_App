@@ -11,7 +11,8 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
-        disable 'GoogleAppIndexingWarning' // Google indexing not required (app won't be published to PlayStore)
+        disable 'GoogleAppIndexingWarning'
+        // Google indexing not required (app won't be published to PlayStore)
         baseline file("lint-baseline.xml")
     }
     buildTypes {

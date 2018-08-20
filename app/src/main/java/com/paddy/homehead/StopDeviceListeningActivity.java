@@ -49,7 +49,7 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
                     Toast.makeText(StopDeviceListeningActivity.this, "No password entered!", Toast.LENGTH_LONG).show();
                 } else {
                     // retrieval of input field data on button click
-                    devicePassword = devicePasswordInput.getText().toString();
+                    devicePassword = devicePasswordInput.getText().toString().trim();
 
                     // Accessing SharedPreferences Data (Stored Device RBP IP Address)
                     SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);

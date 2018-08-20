@@ -144,4 +144,6 @@
     <string name="no_device_id_added">Add Device ID</string>
     <string name="current_device_id_stored">Current Device ID Stored :</string>
     <string name="to_add_device_id_ip_address_or_a_new_trigger_noise_or_to_calibrate_background_noise_levels_and_delete_stored_trigger_noises">Add device ID, IP Address, or new trigger noise; Calibrate background noise levels; Delete stored trigger noises.</string>
+    <string name="view_saved_trigger_noises">Saved Trigger Noises</string>
+    <string name="view_saved_trigger_noises_btn">View Saved Trigger Noises</string>
 </resources>

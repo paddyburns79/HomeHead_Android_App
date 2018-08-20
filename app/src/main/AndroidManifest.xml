@@ -53,6 +53,7 @@
         <activity android:name=".AddNewTriggerNoiseActivity" />
         <activity android:name=".DeleteTriggerNoiseActivity" />
         <activity android:name=".ViewNotificationsReceivedActivity" />
+        <activity android:name=".ViewSavedNoisesActivity"></activity>
     </application>
 
 </manifest>

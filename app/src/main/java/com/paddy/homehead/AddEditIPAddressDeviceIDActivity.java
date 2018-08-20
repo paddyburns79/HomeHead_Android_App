@@ -60,7 +60,7 @@ public class AddEditIPAddressDeviceIDActivity extends AppCompatActivity {
         SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
         // write IP Address input data to SharedPreferences
         SharedPreferences.Editor editor = ipAddressSharedPref.edit();
-        editor.putString("rbp_ip_address", ipAddressInput.getText().toString());
+        editor.putString("rbp_ip_address", ipAddressInput.getText().toString().trim());
         editor.apply();
         // Toast popup to confirm successful save operation
         Toast.makeText(this, "IP Address Saved", Toast.LENGTH_LONG).show();
@@ -91,7 +91,7 @@ public class AddEditIPAddressDeviceIDActivity extends AppCompatActivity {
             SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
             // write IP Address input data to SharedPreferences
             SharedPreferences.Editor editor = deviceIDSharedPref.edit();
-            editor.putString("rbp_device_id", deviceIDInput.getText().toString());
+            editor.putString("rbp_device_id", deviceIDInput.getText().toString().trim());
             editor.apply();
             // Toast popup to confirm successful save operation
             Toast.makeText(this, "Device ID Saved", Toast.LENGTH_LONG).show();

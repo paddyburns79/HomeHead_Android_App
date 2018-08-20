@@ -62,8 +62,8 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                     Toast.makeText(DeleteTriggerNoiseActivity.this, "No password entered!", Toast.LENGTH_LONG).show();
                 } else {
                     // retrieval of input field data on button click
-                    devicePassword = devicePasswordInput.getText().toString();
-                    noiseToDelete = noiseToDeleteInput.getText().toString();
+                    devicePassword = devicePasswordInput.getText().toString().trim();
+                    noiseToDelete = noiseToDeleteInput.getText().toString().trim();
 
                     // Accessing SharedPreferences Data (Stored Device RBP IP Address)
                     SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
@@ -94,8 +94,8 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 // retrieval of input field data on button click
-                devicePassword = devicePasswordInput.getText().toString();
-                noiseToDelete = noiseToDeleteInput.getText().toString();
+                devicePassword = devicePasswordInput.getText().toString().trim();
+                noiseToDelete = noiseToDeleteInput.getText().toString().trim();
 
                 // check if Specific 'Noise to Delete' and Password fields are empty
                 if ((noiseToDeleteInput.length() !=0) && (devicePasswordInput.length() == 0)) {
