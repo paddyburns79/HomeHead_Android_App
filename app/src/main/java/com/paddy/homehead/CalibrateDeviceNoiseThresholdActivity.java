@@ -14,28 +14,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.common.util.IOUtils;
-import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
-import java.io.StringWriter;
+import java.io.InputStreamReader;
 import java.util.Objects;
-import java.util.Properties;
+
 
 public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
 
     // Strings to accept user input data
     String deviceId, ipAddress, devicePassword;
-    int configCycles = 1;
 
     // Input values to hold input field data
     EditText devicePasswordInput;
@@ -62,7 +56,7 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
                     Toast.makeText(CalibrateDeviceNoiseThresholdActivity.this, "No password entered!", Toast.LENGTH_LONG).show();
                 } else {
                     // retrieval of input field data on button click
-                    devicePassword = devicePasswordInput.getText().toString().trim();
+                    devicePassword = devicePasswordInput.getText().toString();
 
                     // Accessing SharedPreferences Data (Stored Device RBP IP Address)
                     SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
@@ -91,7 +85,7 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
     /**
      * Method to execute a command to calibrate the device audio parameters (listening)
      */
-    public void executeSSHCommandCalibrateDevice(){
+    public void executeSSHCommandCalibrateDevice() throws Exception{
         String user = deviceId;
         String password = devicePassword;
         String host = ipAddress;
@@ -104,28 +98,48 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
             session.setConfig("StrictHostKeyChecking", "no");
             session.setTimeout(10000);
             session.connect();
+            // SSH Channel
             ChannelExec channel = (ChannelExec)session.openChannel("exec");
+            // Execute command
             channel.setCommand("cd sopare; python test/test_audio.py");
+            // Obtain command line output as String for debugging (via InputStream)
+            InputStream errStreamCalibrate = channel.getExtInputStream();
+            // connect to channel
             channel.connect();
-            //channel.disconnect();
-
-            // Display message while the device calibration process is carried out (channel remains open during process)
-            while ((configCycles ==1) && (!channel.isClosed())) {
+            // debugging logs TAG strings
+            String TAG_errStr = "hh_err_log";
+            String TAG_errStr_exception = "hh_err_exce";
+            // Reading command line output (from Raspberry Pi)
+            BufferedReader readerCalibrate = new BufferedReader(new InputStreamReader(errStreamCalibrate));
+            StringBuilder outputAddNoise = new StringBuilder();
+            String lineCalibrate;
+            while ((lineCalibrate = readerCalibrate.readLine()) != null) {
+                // append output to StringBuilder
+                outputAddNoise.append(lineCalibrate);
+                // output to log (debugging)
+                Log.i(TAG_errStr, lineCalibrate);
+                // Display message while the device calibration process is carried out
                 Snackbar.make(findViewById(android.R.id.content),
-                        "Device Calibrating", Snackbar.LENGTH_LONG)
+                        "Device Calibrating - Please Wait", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Action", null).show();
-           }
-           // failsafe to ensure config cycle only runs once
-            configCycles++;
-            // Display message to confirm the calibration process has been completed (channel closes on completion)
-            Snackbar.make(findViewById(android.R.id.content),
-                    "Device Successfully Calibrated.", Snackbar.LENGTH_LONG)
-                    .setDuration(20000).setAction("Action", null).show();
-            // Disconnect channel
-            channel.disconnect();
-            // clear input field
-            devicePasswordInput.getText().clear();
+            }
+            // InputStream exception try/catch
+            try {
+                Thread.sleep(1000);
+            } catch (Exception ee) {
+                Log.e(TAG_errStr, TAG_errStr_exception);
+            }
+            if (channel.isClosed()) {
+                // Display message to confirm the calibration process has been completed (channel closes on completion)
+                Snackbar.make(findViewById(android.R.id.content),
+                        "Device Successfully Calibrated.", Snackbar.LENGTH_LONG)
+                        .setDuration(20000).setAction("Action", null).show();
+                // Disconnect channel
+                channel.disconnect();
+                // clear input field
+                devicePasswordInput.getText().clear();
 
+            }
         }
 
         catch(JSchException e){
@@ -134,9 +148,9 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
                     "Error. Check details entered, your internet connection, or if device has been shut down",
                     Snackbar.LENGTH_LONG)
                     .setDuration(20000).setAction("Action", null).show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        // Resetting the configCycle check in the event the user wishes to recalibrate the device
-        configCycles = 1;
     }
 
     /**

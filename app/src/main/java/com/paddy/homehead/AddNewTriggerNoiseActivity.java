@@ -62,7 +62,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                 .build();
         noisesAddedDB.setFirestoreSettings(settings);
 
-        // set onclick listener for View Saved Noises (nav to activity)
+       /* // set onclick listener for View Saved Noises (nav to activity)
         Button btnViewSavedNoises = findViewById(R.id.view_saved_noises_button);
         btnViewSavedNoises.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +70,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                 Intent viewSavedNoisesIntent = new Intent(AddNewTriggerNoiseActivity.this, ViewSavedNoisesActivity.class);
                 startActivity(viewSavedNoisesIntent);
             }
-        });
+        });*/
 
         // linking input values to each input field
         devicePasswordInput = (EditText) findViewById(R.id.calibrate_device_device_PW_textbox);
@@ -219,7 +219,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                 if(lineAddNoise.equals(cmdRecordMsg)) {
                     // Snackbar to prompt user
                     Snackbar.make(findViewById(android.R.id.content),
-                            "Record Noise / Phrase", Snackbar.LENGTH_LONG)
+                            "Record Noise / Phrase", Snackbar.LENGTH_INDEFINITE)
                             .setAction("Action", null).show();
                 }
             }

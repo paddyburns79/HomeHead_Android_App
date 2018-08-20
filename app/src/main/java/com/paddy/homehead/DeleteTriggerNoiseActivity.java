@@ -262,7 +262,7 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
             while (!channel.isClosed()) {
                 // Display message to confirm noise has been deleted
                 Snackbar.make(findViewById(android.R.id.content),
-                        "Deleting Noises", Snackbar.LENGTH_LONG)
+                        "Deleting Noises", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Action", null).show();
             }
             // Display message to confirm noise has been deleted
