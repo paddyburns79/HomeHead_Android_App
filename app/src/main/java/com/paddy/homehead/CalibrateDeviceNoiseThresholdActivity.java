@@ -44,7 +44,7 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         // linking input values to each input field
-        devicePasswordInput = (EditText) findViewById(R.id.calibrate_device_device_PW_textbox);
+        devicePasswordInput = findViewById(R.id.calibrate_device_device_PW_textbox);
 
         Button btnStart = findViewById(R.id.button_calibrate_device);
         btnStart.setOnClickListener(new View.OnClickListener() {
