@@ -17,6 +17,7 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.RemoteMessage;
@@ -54,13 +55,24 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
      @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-         // retrieve message data
+         // Cloud Firestore instance settings
+         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                 .setTimestampsInSnapshotsEnabled(true)
+                 .build();
+         dBase.setFirestoreSettings(settings);
+
+         /*// retrieve message data
          Map<String, String> data = remoteMessage.getData();
          String title = data.get("title");
-         String messageBody = data.get("body");
+         String messageBody = data.get("body");*/
 
          // forward notification data to sendNotification method if areHeadphonesConnected value = true
          if (areHeadphonesConnected()) {
+             // retrieve message data
+             Map<String, String> data = remoteMessage.getData();
+             String title = data.get("title");
+             String messageBody = data.get("body");
+
             sendNotification(title, messageBody);
             // add message data to SQLite database
             notificationsDB = new DatabaseHelper(this);
@@ -104,9 +116,11 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
             NotificationChannel channel = new NotificationChannel(channelId,
                     "Channel human readable title",
                     NotificationManager.IMPORTANCE_HIGH);
+            assert notificationManager != null;
             notificationManager.createNotificationChannel(channel);
         }
 
+        assert notificationManager != null;
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
 
     }
@@ -139,9 +153,6 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
      */
     public void sendRegistrationToServer(String token) {
 
-        // obtain the unique device ID
-        String deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
         // obtain the device name/model
         String deviceMod = Build.MANUFACTURER + " " + Build.MODEL;
 
@@ -153,9 +164,8 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
         //deviceData.put("headphonesConnected", areHeadphonesConnected());
 
         // send data to Firestore DB
-        dBase.collection("devices").document(deviceID)
+        dBase.collection("devices").document()
                 .set(deviceData);
-
     }
 
     /**

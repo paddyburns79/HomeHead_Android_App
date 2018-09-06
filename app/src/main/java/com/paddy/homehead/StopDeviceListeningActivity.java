@@ -1,5 +1,6 @@
 package com.paddy.homehead;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -16,54 +17,62 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+import java.util.Objects;
+
 public class StopDeviceListeningActivity extends AppCompatActivity {
 
     // Strings to accept user input data
     String deviceId, ipAddress, devicePassword;
 
     // Input values for each inout field
-    EditText deviceIdInput;
     EditText devicePasswordInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stop_device_listening);
+        // add logo to action bar
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.homehead_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         // linking input values to each input field
-        deviceIdInput = (EditText) findViewById(R.id.start_device_deviceID_textbox);
         devicePasswordInput = (EditText) findViewById(R.id.start_device_Device_PW_textbox);
 
         Button btnStop = findViewById(R.id.button_stop_listen);
         btnStop.setOnClickListener(new View.OnClickListener() {
             //start execution of ssh commands
+            @SuppressLint("StaticFieldLeak")
             @Override
-            public void onClick(View v){
-                if ((deviceIdInput.length()==0) || (devicePasswordInput.length()==0)) {
+            public void onClick(View v) {
+                // check if text has been entered in the password field
+                if (devicePasswordInput.length() == 0) {
                     // messsage to highlight empty fields
-                    Toast.makeText(StopDeviceListeningActivity.this, "Text Field Empty!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(StopDeviceListeningActivity.this, "No password entered!", Toast.LENGTH_LONG).show();
                 } else {
                     // retrieval of input field data on button click
-                    deviceId = deviceIdInput.getText().toString();
-                    devicePassword = devicePasswordInput.getText().toString();
-                }
+                    devicePassword = devicePasswordInput.getText().toString().trim();
 
+                    // Accessing SharedPreferences Data (Stored Device RBP IP Address)
+                    SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
+                    ipAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
 
-                // Accessing SharedPreferences Data (Stored Device RBP IP Address)
-                SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
-                ipAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
+                    // Accessing SharedPreferences Data (Stored Device ID)
+                    SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
+                    deviceId = deviceIDSharedPref.getString("rbp_device_id", "");
 
-                new AsyncTask<Integer, Void, Void>(){
-                    @Override
-                    protected Void doInBackground(Integer... params) {
-                        try {
-                            executeSSHcommandStopListening();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                    new AsyncTask<Integer, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Integer... params) {
+                            try {
+                                executeSSHcommandStopListening();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            return null;
                         }
-                        return null;
-                    }
-                }.execute(1);
+                    }.execute(1);
+                }
             }
         });
     }
@@ -72,20 +81,24 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
      * Method to execute a command to disable device listening via SSH connection
      */
     public void executeSSHcommandStopListening(){
-        String user = deviceId;
-        String password = devicePassword;
-        String host = ipAddress;
         int port=22;
         try{
+            // Set SSH Session and Parameters
             JSch jsch = new JSch();
-            Session session = jsch.getSession(user, host, port);
-            session.setPassword(password);
+            Session session = jsch.getSession(deviceId, ipAddress, port);
+            session.setPassword(devicePassword);
+            // Avoid asking for key confirmation
             session.setConfig("StrictHostKeyChecking", "no");
             session.setTimeout(10000);
+            // connect session
             session.connect();
+            // SSH Channel
             ChannelExec channel = (ChannelExec)session.openChannel("exec");
+            // Execute command
             channel.setCommand("killall python");
+            // connect SSH channel
             channel.connect();
+            // discnnect channel after execution of command
             channel.disconnect();
             // Snackbar to indicate connection status : success
             if (channel.isClosed()) {
@@ -93,9 +106,7 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
                         "Listening Mode Successfully Disabled! ", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 // clear input fields
-                deviceIdInput.getText().clear();
                 devicePasswordInput.getText().clear();
-
                 }
         }
         catch(JSchException e){

@@ -6,12 +6,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.Objects;
+
 public class DeviceConfigMainMenuActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_config_main_menu);
+        // add logo to action bar
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.homehead_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
 
         // set onclick listener for Add/Edit IP Address Button (nav to activity)
@@ -19,7 +25,7 @@ public class DeviceConfigMainMenuActivity extends AppCompatActivity {
         btnAddEditIPAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent addEditIPAddIntent = new Intent(DeviceConfigMainMenuActivity.this, AddEditIPAddressActivity.class);
+                Intent addEditIPAddIntent = new Intent(DeviceConfigMainMenuActivity.this, AddEditIPAddressDeviceIDActivity.class);
                 startActivity(addEditIPAddIntent);
             }
         });

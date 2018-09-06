@@ -9,6 +9,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ViewNotificationsReceivedActivity extends AppCompatActivity {
 
@@ -18,6 +19,10 @@ public class ViewNotificationsReceivedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications_received);
+        // add logo to action bar
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.homehead_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         // link Listview to DB
         ListView listView = findViewById(R.id.notifications_listview);

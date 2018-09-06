@@ -9,11 +9,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+
+import java.util.Objects;
 
 public class StartDeviceListeningActivity extends AppCompatActivity {
 
@@ -21,43 +24,53 @@ public class StartDeviceListeningActivity extends AppCompatActivity {
     String deviceId, ipAddress, devicePassword;
 
     // Input values to hold input field data
-    EditText deviceIdInput;
     EditText devicePasswordInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_device_listening);
+        // add logo to action bar
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.homehead_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         // linking input values to each input field
-        deviceIdInput = (EditText) findViewById(R.id.start_device_deviceID_textbox);
         devicePasswordInput = (EditText) findViewById(R.id.start_device_Device_PW_textbox);
 
         Button btnStart = findViewById(R.id.button_start_listen);
         btnStart.setOnClickListener(new View.OnClickListener() {
             //start execution of ssh commands
             @Override
-            public void onClick(View v){
-                // retrieval of input field data on button click
-                deviceId = deviceIdInput.getText().toString();
-                devicePassword = devicePasswordInput.getText().toString();
+            public void onClick(View v) {
+                // check if text has been entered in the password field
+                if (devicePasswordInput.length() == 0) {
+                    // messsage to highlight empty field
+                    Toast.makeText(StartDeviceListeningActivity.this, "No password entered!", Toast.LENGTH_LONG).show();
+                } else {
+                    // retrieval of input field data on button click
+                    devicePassword = devicePasswordInput.getText().toString().trim();
 
-                // Accessing SharedPreferences Data (Stored Device RBP IP Address)
-                SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
-                ipAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
+                    // Accessing SharedPreferences Data (Stored Device RBP IP Address)
+                    SharedPreferences ipAddressSharedPref = getSharedPreferences("device_ip_shared_pref", Context.MODE_PRIVATE);
+                    ipAddress = ipAddressSharedPref.getString("rbp_ip_address", "");
 
+                    // Accessing SharedPreferences Data (Stored Device ID)
+                    SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
+                    deviceId = deviceIDSharedPref.getString("rbp_device_id", "");
 
-                new AsyncTask<Integer, Void, Void>(){
-                    @Override
-                    protected Void doInBackground(Integer... params) {
-                        try {
-                            executeSSHCommandStartListening();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                    new AsyncTask<Integer, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Integer... params) {
+                            try {
+                                executeSSHCommandStartListening();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            return null;
                         }
-                        return null;
-                    }
-                }.execute(1);
+                    }.execute(1);
+                }
             }
         });
     }
@@ -87,8 +100,7 @@ public class StartDeviceListeningActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(android.R.id.content),
                         "Device is Actively Listening", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                // clear input fields
-                deviceIdInput.getText().clear();
+                // clear input field
                 devicePasswordInput.getText().clear();
             }
         }
