@@ -149,4 +149,5 @@
     <string name="saved_trigger_noises">Saved Trigger Noises</string>
     <string name="noise">Noise</string>
     <string name="noise_saved">Noise Saved</string>
+    <string name="view_setup_instruction_video">View Setup Instruction Video</string>
 </resources>

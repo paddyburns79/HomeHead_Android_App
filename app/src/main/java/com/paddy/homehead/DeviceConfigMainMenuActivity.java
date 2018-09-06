@@ -1,8 +1,10 @@
 package com.paddy.homehead;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -57,6 +59,16 @@ public class DeviceConfigMainMenuActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent deleteSavedNoisesIntent = new Intent(DeviceConfigMainMenuActivity.this, DeleteTriggerNoiseActivity.class);
                 startActivity(deleteSavedNoisesIntent);
+            }
+        });
+
+        // set onclick listener for Delete Saved Trigger Noises Button (nav to activity)
+        Button btnInstrVidYouTube = findViewById(R.id.show_instr_video_btn);
+        btnInstrVidYouTube.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/PCMZNqE9O08")));
+                Log.i("Video", "Video Playing....");
             }
         });
     }

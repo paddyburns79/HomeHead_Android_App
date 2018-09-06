@@ -1,5 +1,6 @@
 package com.paddy.homehead;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -130,8 +131,10 @@ public class SystemShutdownActivity extends AppCompatActivity {
 
     // set positive 'yes' button
     shutdownConfirm.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        @SuppressLint("StaticFieldLeak")
         @Override
         public void onClick(DialogInterface dialogInterface, int which) {
+            // asynchronous calling of method to execute SSH connection
            new AsyncTask<Integer, Void, Void>(){
                 @Override
                 protected Void doInBackground(Integer... params) {

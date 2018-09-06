@@ -1,5 +1,6 @@
 package com.paddy.homehead;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -41,6 +42,7 @@ public class StartDeviceListeningActivity extends AppCompatActivity {
         Button btnStart = findViewById(R.id.button_start_listen);
         btnStart.setOnClickListener(new View.OnClickListener() {
             //start execution of ssh commands
+            @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(View v) {
                 // check if text has been entered in the password field
@@ -59,6 +61,7 @@ public class StartDeviceListeningActivity extends AppCompatActivity {
                     SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
                     deviceId = deviceIDSharedPref.getString("rbp_device_id", "");
 
+                    // asynchronous calling of method to execute SSH connection
                     new AsyncTask<Integer, Void, Void>() {
                         @Override
                         protected Void doInBackground(Integer... params) {

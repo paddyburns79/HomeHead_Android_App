@@ -43,8 +43,6 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
     String TAG_All_Delete =  "allRecordsDelete";
     String TAG_Doc_Delete =  "docDelete";
 
-
-
     // Strings to accept user input data
     String deviceId, ipAddress, devicePassword, noiseToDelete;
 
@@ -113,6 +111,7 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                     SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
                     deviceId = deviceIDSharedPref.getString("rbp_device_id", "");
 
+                    // asynchronous calling of method to execute SSH connection
                     new AsyncTask<Integer, Void, Void>() {
                         @Override
                         protected Void doInBackground(Integer... params) {
@@ -180,8 +179,7 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
             channel.setCommand("cd sopare; ./sopare.py -d "+noiseToDelete);
             channel.connect();
 
-            // query Firestore database
-            // Create a reference to the cities collection
+            // query Firestore database - create a reference to the trigger_noises collection
             CollectionReference noisesRef = dBNoises.collection("trigger_noises");
             // Create a query against the collection.
             Query query = noisesRef.whereEqualTo("noise", noiseToDelete);
@@ -194,13 +192,14 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             if (document.getData().isEmpty()) {
                                 Log.d(TAG_Doc_Delete, "Empty document");
-                                Toast.makeText(DeleteTriggerNoiseActivity.this, "Noise Not Saved to System!",Toast.LENGTH_LONG).show();
+                                Toast.makeText(DeleteTriggerNoiseActivity.this,
+                                        "Noise Not Saved to System!",Toast.LENGTH_LONG).show();
                             } else {
                                 // debugging TAG
                                 Log.d(TAG_Doc_Delete, document.getId());
                                 // assign document ID to String var
                                 String docId = document.getId();
-                                // delete all noises (one at a time) from DB using Document ID obtained from DB query
+                                // delete all noises (one at a time) from DB using Document ID
                                 dBNoises.collection("trigger_noises").document(docId)
                                         .delete().addOnSuccessListener(new OnSuccessListener< Void >() {
                                     @Override
@@ -263,6 +262,7 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
             @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
+                // asynchronous calling of method to execute SSH connection
                 new AsyncTask<Integer, Void, Void>(){
                     @Override
                     protected Void doInBackground(Integer... params) {
@@ -342,7 +342,8 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
 
                  // query Firestore database
-                dBNoises.collection("trigger_noises").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                dBNoises.collection("trigger_noises").get().addOnCompleteListener
+                        (new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
@@ -350,11 +351,11 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 // check if data is returned
                                 if(document.getData().isEmpty()) {
-                                    Toast.makeText(DeleteTriggerNoiseActivity.this, "There are no contents in this list!",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(DeleteTriggerNoiseActivity.this,
+                                            "There are no contents in this list!",Toast.LENGTH_LONG).show();
                                 } else {
                                     Log.d(TAG_All_Delete, document.getId());
                                     String docId = document.getId();
-
                                     // delete all noises (one at a time) from DB using Document ID obtained from DB query
                                     dBNoises.collection("trigger_noises").document(docId)
                                             .delete().addOnSuccessListener(new OnSuccessListener< Void >() {
