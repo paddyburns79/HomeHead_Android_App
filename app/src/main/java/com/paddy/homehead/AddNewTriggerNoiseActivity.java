@@ -62,7 +62,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                 .build();
         noisesAddedDB.setFirestoreSettings(settings);
 
-       /* // set onclick listener for View Saved Noises (nav to activity)
+        // set onclick listener for View Saved Noises (nav to activity)
         Button btnViewSavedNoises = findViewById(R.id.view_saved_noises_button);
         btnViewSavedNoises.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +70,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                 Intent viewSavedNoisesIntent = new Intent(AddNewTriggerNoiseActivity.this, ViewSavedNoisesActivity.class);
                 startActivity(viewSavedNoisesIntent);
             }
-        });*/
+        });
 
         // linking input values to each input field
         devicePasswordInput = (EditText) findViewById(R.id.calibrate_device_device_PW_textbox);
@@ -183,23 +183,20 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
             JSch jsch = new JSch();
             Session session = jsch.getSession(deviceId, ipAddress, port);
             session.setPassword(devicePassword);
-
             // Avoid asking for key confirmation
             Properties prop = new Properties();
             prop.put("StrictHostKeyChecking", "no");
             session.setConfig(prop);
-
+            // connect session
             session.connect();
-
             // SSH Channel
             ChannelExec channel = (ChannelExec) session.openChannel("exec");
             // Execute command
             channel.setCommand("cd sopare; ./sopare.py -v -t " + noiseDescription);
-            // Obtain command line output as String (via InputStream)
+            // Access command line InputStream via SSH channel
             InputStream errStreamAddNoise = channel.getExtInputStream();
             // connect to channel
             channel.connect();
-
             // debugging logs TAG strings
             String TAG_errStr = "hh_err_log";
             String TAG_errStr_exception = "hh_err_exce";
@@ -229,14 +226,12 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
             } catch (Exception ee) {
                 Log.e(TAG_errStr, TAG_errStr_exception);
             }
-
             // Snackbar to indicate process has completed
             Snackbar.make(findViewById(android.R.id.content),
                     "Recording Completed", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             // Disconnect channel
             channel.disconnect();
-
         // SSH channel catch
         } catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
@@ -318,8 +313,6 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                                             .setAction("Action", null).show();
                                 }
                             });
-
-
                 }
             }
             // InputStream exception try/catch

@@ -1,5 +1,6 @@
 package com.paddy.homehead;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -41,6 +42,7 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
         Button btnStop = findViewById(R.id.button_stop_listen);
         btnStop.setOnClickListener(new View.OnClickListener() {
             //start execution of ssh commands
+            @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(View v) {
                 // check if text has been entered in the password field
@@ -79,20 +81,24 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
      * Method to execute a command to disable device listening via SSH connection
      */
     public void executeSSHcommandStopListening(){
-        String user = deviceId;
-        String password = devicePassword;
-        String host = ipAddress;
         int port=22;
         try{
+            // Set SSH Session and Parameters
             JSch jsch = new JSch();
-            Session session = jsch.getSession(user, host, port);
-            session.setPassword(password);
+            Session session = jsch.getSession(deviceId, ipAddress, port);
+            session.setPassword(devicePassword);
+            // Avoid asking for key confirmation
             session.setConfig("StrictHostKeyChecking", "no");
             session.setTimeout(10000);
+            // connect session
             session.connect();
+            // SSH Channel
             ChannelExec channel = (ChannelExec)session.openChannel("exec");
+            // Execute command
             channel.setCommand("killall python");
+            // connect SSH channel
             channel.connect();
+            // discnnect channel after execution of command
             channel.disconnect();
             // Snackbar to indicate connection status : success
             if (channel.isClosed()) {
@@ -101,7 +107,6 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
                 // clear input fields
                 devicePasswordInput.getText().clear();
-
                 }
         }
         catch(JSchException e){
