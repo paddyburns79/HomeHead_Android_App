@@ -1,18 +1,32 @@
 package com.paddy.homehead;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -21,6 +35,15 @@ import com.jcraft.jsch.Session;
 import java.util.Objects;
 
 public class DeleteTriggerNoiseActivity extends AppCompatActivity {
+
+    // Access a Cloud Firestore instance
+    FirebaseFirestore dBNoises = FirebaseFirestore.getInstance();
+
+    // log tag strings
+    String TAG_All_Delete =  "allRecordsDelete";
+    String TAG_Doc_Delete =  "docDelete";
+
+
 
     // Strings to accept user input data
     String deviceId, ipAddress, devicePassword, noiseToDelete;
@@ -38,6 +61,22 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
         getSupportActionBar().setLogo(R.mipmap.homehead_launcher);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
+        // Cloud Firestore instance settings
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        dBNoises.setFirestoreSettings(settings);
+
+        // set onclick listener for View Saved Noises (nav to activity)
+        Button btnViewSavedNoises = findViewById(R.id.view_saved_noises_button2);
+        btnViewSavedNoises.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent viewSavedNoisesIntent = new Intent(DeleteTriggerNoiseActivity.this, ViewSavedNoisesActivity.class);
+                startActivity(viewSavedNoisesIntent);
+            }
+        });
+
         // linking input values to each input field
         devicePasswordInput = (EditText) findViewById(R.id.start_device_Device_PW_textbox);
         noiseToDeleteInput = (EditText) findViewById(R.id.noise_to_delete_textbox);
@@ -46,6 +85,7 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
         Button btnDeleteSpecificNoise = findViewById(R.id.delete_specific_noise_button);
         btnDeleteSpecificNoise.setOnClickListener(new View.OnClickListener() {
             //start execution of ssh commands
+            @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(View v){
                 // check if text has been entered in the password field
@@ -140,19 +180,55 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
             channel.setCommand("cd sopare; ./sopare.py -d "+noiseToDelete);
             channel.connect();
 
+            // query Firestore database
+            // Create a reference to the cities collection
+            CollectionReference noisesRef = dBNoises.collection("trigger_noises");
+            // Create a query against the collection.
+            Query query = noisesRef.whereEqualTo("noise", noiseToDelete);
+            // obtain Firebase Document ID for query results (to delete that document)
+            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        // obtain database records
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            if (document.getData().isEmpty()) {
+                                Log.d(TAG_Doc_Delete, "Empty document");
+                                Toast.makeText(DeleteTriggerNoiseActivity.this, "Noise Not Saved to System!",Toast.LENGTH_LONG).show();
+                            } else {
+                                // debugging TAG
+                                Log.d(TAG_Doc_Delete, document.getId());
+                                // assign document ID to String var
+                                String docId = document.getId();
+                                // delete all noises (one at a time) from DB using Document ID obtained from DB query
+                                dBNoises.collection("trigger_noises").document(docId)
+                                        .delete().addOnSuccessListener(new OnSuccessListener< Void >() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG_Doc_Delete, "DocumentSnapshot successfully deleted!");
+                                        Snackbar.make(findViewById(android.R.id.content),
+                                                "Trigger Noise Deleted", Snackbar.LENGTH_LONG)
+                                                .setAction("Action", null).show();
+                                    }
+                                })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d(TAG_Doc_Delete, "Error deleting document", e);
+                                            }
+                                        });
+                            }
+                        }
+                    } else {
+                        Log.d(TAG_Doc_Delete, "Error getting documents: ", task.getException());
+                    }
+                }
+            });
             // Disconnect channel
             channel.disconnect();
-            if(!channel.isConnected()) {
-                // Display message to confirm noise has been deleted
-                Snackbar.make(findViewById(android.R.id.content),
-                        "Trigger Noise Deleted", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                // clear password input field
-                devicePasswordInput.getText().clear();
-            }
-
+            // clear password input field
+            devicePasswordInput.getText().clear();
         }
-
         catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
@@ -160,6 +236,7 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                     Snackbar.LENGTH_LONG)
                     .setDuration(20000).setAction("Action", null).show();
         }
+
     }
 
     /**
@@ -183,6 +260,7 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
 
         // set positive 'yes' button
         deleteAllConfirm.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 new AsyncTask<Integer, Void, Void>(){
@@ -230,7 +308,6 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
             // Call method to delete all saved noise references (for complete deletion)
             executeSSHCommandDeleteAllNoiseEntries();
         }
-
         catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
@@ -238,7 +315,6 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                     Snackbar.LENGTH_LONG)
                     .setDuration(20000).setAction("Action", null).show();
         }
-
     }
 
     /**
@@ -264,6 +340,42 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(android.R.id.content),
                         "Deleting Noises", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Action", null).show();
+
+                 // query Firestore database
+                dBNoises.collection("trigger_noises").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            // obtain database records
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                // check if data is returned
+                                if(document.getData().isEmpty()) {
+                                    Toast.makeText(DeleteTriggerNoiseActivity.this, "There are no contents in this list!",Toast.LENGTH_LONG).show();
+                                } else {
+                                    Log.d(TAG_All_Delete, document.getId());
+                                    String docId = document.getId();
+
+                                    // delete all noises (one at a time) from DB using Document ID obtained from DB query
+                                    dBNoises.collection("trigger_noises").document(docId)
+                                            .delete().addOnSuccessListener(new OnSuccessListener< Void >() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d(TAG_All_Delete, "DocumentSnapshot successfully deleted!");
+                                        }
+                                    })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d(TAG_All_Delete, "Error deleting document", e);
+                                                }
+                                            });
+                                }
+                            }
+                        } else {
+                            Log.d(TAG_All_Delete, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
             }
             // Display message to confirm noise has been deleted
             Snackbar.make(findViewById(android.R.id.content),
@@ -271,9 +383,7 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                     .setAction("Action", null).show();
             // Disconnect channel
             channel.disconnect();
-
         }
-
         catch(JSchException e){
             // Snackbar to indicate connection status (failure) and show the error in the UI
             Snackbar.make(findViewById(android.R.id.content),
@@ -283,4 +393,6 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
         }
 
     }
+
+
 }

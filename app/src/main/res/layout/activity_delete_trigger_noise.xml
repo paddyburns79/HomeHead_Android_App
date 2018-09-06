@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".DeleteTriggerNoiseActivity">
 
+    <Button
+        android:id="@+id/view_saved_noises_button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/view_saved_trigger_noises_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/delete_noise_activity_textview" />
+
     <TextView
         android:id="@+id/delete_noise_activity_textview"
         android:layout_width="wrap_content"
@@ -31,8 +43,9 @@
         android:layout_marginTop="32dp"
         android:text="@string/enter_device_info"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/delete_noise_activity_textview" />
+        app:layout_constraintTop_toBottomOf="@+id/view_saved_noises_button2" />
 
     <EditText
         android:id="@+id/start_device_Device_PW_textbox"
@@ -40,7 +53,6 @@
         android:layout_height="49dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
         android:backgroundTint="@android:color/holo_green_dark"
         android:ems="10"
         android:hint="@string/device_password"
@@ -56,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text="@string/to_delete_a_specific_noise_enter_the_name_below"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.514"
