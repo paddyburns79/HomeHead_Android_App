@@ -62,7 +62,7 @@ public class DeviceConfigMainMenuActivity extends AppCompatActivity {
             }
         });
 
-        // set onclick listener for Delete Saved Trigger Noises Button (nav to activity)
+        // set onclick listener for button to show system setup instruction video (YouTube)
         Button btnInstrVidYouTube = findViewById(R.id.show_instr_video_btn);
         btnInstrVidYouTube.setOnClickListener(new View.OnClickListener() {
             @Override
