@@ -1,5 +1,6 @@
 package com.paddy.homehead;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -79,6 +80,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
         ImageButton btnStartNewNoiseRecording = findViewById(R.id.add_noise_speak_imgBtn);
         btnStartNewNoiseRecording.setOnClickListener(new View.OnClickListener() {
             //start execution of ssh commands
+            @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(View v){
                 // check if both fields are empty
@@ -107,6 +109,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                     SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
                     deviceId = deviceIDSharedPref.getString("rbp_device_id", "");
 
+                    // asynchronous calling of method to execute SSH connection
                     new AsyncTask<Integer, Void, Void>() {
                         @Override
                         protected Void doInBackground(Integer... params) {
@@ -122,10 +125,10 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
             }
         });
 
-
         ImageButton btnSaveToDictionary = findViewById(R.id.add_noise_dictionary_imgBtn);
         btnSaveToDictionary.setOnClickListener(new View.OnClickListener() {
             //start execution of ssh commands
+            @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(View v){
                 // check if both fields are empty
@@ -154,7 +157,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                     SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
                     deviceId = deviceIDSharedPref.getString("rbp_device_id", "");
 
-
+                    // asynchronous calling of method to execute SSH connection
                     new AsyncTask<Integer, Void, Void>() {
                         @Override
                         protected Void doInBackground(Integer... params) {

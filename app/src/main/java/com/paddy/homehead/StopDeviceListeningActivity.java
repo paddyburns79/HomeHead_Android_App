@@ -61,6 +61,7 @@ public class StopDeviceListeningActivity extends AppCompatActivity {
                     SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
                     deviceId = deviceIDSharedPref.getString("rbp_device_id", "");
 
+                    // asynchronous calling of method to execute SSH connection
                     new AsyncTask<Integer, Void, Void>() {
                         @Override
                         protected Void doInBackground(Integer... params) {

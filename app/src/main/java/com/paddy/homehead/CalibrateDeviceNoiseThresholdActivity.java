@@ -1,5 +1,6 @@
 package com.paddy.homehead;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -48,6 +49,7 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
 
         Button btnStart = findViewById(R.id.button_calibrate_device);
         btnStart.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(View v){
                 // check if text has been entered in the password field
@@ -65,7 +67,7 @@ public class CalibrateDeviceNoiseThresholdActivity extends AppCompatActivity {
                     // Accessing SharedPreferences Data (Stored Device ID)
                     SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
                     deviceId = deviceIDSharedPref.getString("rbp_device_id", "");
-                    // call method to execute SSH Command
+                    // asynchronous calling of method to execute SSH connection
                     new AsyncTask<Integer, Void, Void>() {
                         @Override
                         protected Void doInBackground(Integer... params) {
