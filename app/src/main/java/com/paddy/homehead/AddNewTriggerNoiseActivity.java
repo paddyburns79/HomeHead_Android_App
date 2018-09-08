@@ -109,7 +109,20 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
                     SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
                     deviceId = deviceIDSharedPref.getString("rbp_device_id", "");
 
+                    // stop device listening before adding noise
                     // asynchronous calling of method to execute SSH connection
+                    new AsyncTask<Integer, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Integer... params) {
+                            try {
+                                executeSSHcommandStopListening();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+                    }.execute(1);
+                    // call method to add a noise
                     new AsyncTask<Integer, Void, Void>() {
                         @Override
                         protected Void doInBackground(Integer... params) {
@@ -348,7 +361,7 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
         addNewNoiseToolTip.setCancelable(true);
         // set messages
         addNewNoiseToolTip.setTitle("Adding New Trigger Noise");
-        addNewNoiseToolTip.setMessage("To add a new trigger noise (i.e. speech or a consistent, repeatable sound) enter the required details, press record and follow the on-screen prompt.\n\nEach noise should be recorded at least 3 times before saving to the device dictionary.\n\nIf recording speech, record one word only.");
+        addNewNoiseToolTip.setMessage("To add a new trigger noise (i.e. speech or a consistent, repeatable sound) enter the required details, press record and follow the on-screen prompt.\n\nEach noise should be recorded at least 3 times before saving to the device dictionary.\n\nIf recording speech, record one word only.\n\nThe process stops device active listening so recommence listening after you save the noise if you wish.");
         // set negative 'cancel' button
         addNewNoiseToolTip.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -360,5 +373,41 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
         addNewNoiseToolTip.show();
 
     }
+
+    /**
+     * Method to execute a command to disable device listening via SSH connection
+     * Prevents the device crashing if you attempt to add a noise whilst listening
+     * mode is active
+     */
+    public void executeSSHcommandStopListening(){
+        int port=22;
+        try{
+            // Set SSH Session and Parameters
+            JSch jsch = new JSch();
+            Session session = jsch.getSession(deviceId, ipAddress, port);
+            session.setPassword(devicePassword);
+            // Avoid asking for key confirmation
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.setTimeout(10000);
+            // connect session
+            session.connect();
+            // SSH Channel
+            ChannelExec channel = (ChannelExec)session.openChannel("exec");
+            // Execute command
+            channel.setCommand("killall python");
+            // connect SSH channel
+            channel.connect();
+            // discnnect channel after execution of command
+            channel.disconnect();
+        }
+        catch(JSchException e){
+            // Snackbar to indicate connection status (failure) and show the error in the UI
+            Snackbar.make(findViewById(android.R.id.content),
+                    "Error. Check details entered, your internet connection, or if device has been shut down",
+                    Snackbar.LENGTH_LONG)
+                    .setDuration(20000).setAction("Action", null).show();
+        }
+    }
+
 
 }

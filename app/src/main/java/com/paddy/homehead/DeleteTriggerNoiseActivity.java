@@ -32,6 +32,9 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class DeleteTriggerNoiseActivity extends AppCompatActivity {
@@ -168,7 +171,6 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
     public void executeSSHCommandDeleteSpecificNoise(){
         int port=22;
         try{
-
             JSch jsch = new JSch();
             Session session = jsch.getSession(deviceId, ipAddress, port);
             session.setPassword(devicePassword);
@@ -190,10 +192,12 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // obtain database records
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            if (document.getData().isEmpty()) {
+                            if (document.getData().size()==0) {
                                 Log.d(TAG_Doc_Delete, "Empty document");
-                                Toast.makeText(DeleteTriggerNoiseActivity.this,
-                                        "Noise Not Saved to System!",Toast.LENGTH_LONG).show();
+                                // Display message to confirm no noise saved to delete
+                                Snackbar.make(findViewById(android.R.id.content),
+                                        "Noise Not Saved to System!", Snackbar.LENGTH_SHORT)
+                                        .setAction("Action", null).show();
                             } else {
                                 // debugging TAG
                                 Log.d(TAG_Doc_Delete, document.getId());
@@ -287,7 +291,6 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
     public void executeSSHCommandDeleteAllNoisesRawFiles(){
         int port=22;
         try{
-
             JSch jsch = new JSch();
             Session session = jsch.getSession(deviceId, ipAddress, port);
             session.setPassword(devicePassword);
@@ -302,7 +305,7 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
             while (!channel.isClosed()) {
                 // Display message to confirm noise has been deleted
                 Snackbar.make(findViewById(android.R.id.content),
-                        "Deleting Noises", Snackbar.LENGTH_LONG)
+                        "Deleting Noises", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Action", null).show();
             }
             // Call method to delete all saved noise references (for complete deletion)
@@ -323,7 +326,6 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
     public void executeSSHCommandDeleteAllNoiseEntries(){
         int port=22;
         try{
-
             JSch jsch = new JSch();
             Session session = jsch.getSession(deviceId, ipAddress, port);
             session.setPassword(devicePassword);
@@ -334,34 +336,30 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
             channel.setCommand("cd sopare; ./sopare.py -d '*'");
             channel.connect();
 
-            // Functions conditional on the channel being open (i.e. command being executed)
-            while (!channel.isClosed()) {
-                // Display message to confirm noise has been deleted
-                Snackbar.make(findViewById(android.R.id.content),
-                        "Deleting Noises", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Action", null).show();
-
-                 // query Firestore database
-                dBNoises.collection("trigger_noises").get().addOnCompleteListener
-                        (new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            // obtain database records
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                // check if data is returned
-                                if(document.getData().isEmpty()) {
-                                    Toast.makeText(DeleteTriggerNoiseActivity.this,
-                                            "There are no contents in this list!",Toast.LENGTH_LONG).show();
-                                } else {
-                                    Log.d(TAG_All_Delete, document.getId());
-                                    String docId = document.getId();
+             // query Firestore database
+            dBNoises.collection("trigger_noises").get().addOnCompleteListener
+                    (new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        // obtain database records
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            // add document ID to Array
+                            List<String> docIdArray = new ArrayList<>(Collections.singleton(document.getId()));
+                            // check if data is returned
+                            if(docIdArray.size() == 0) {
+                                // Display message to confirm no noises saved to delete
+                                Snackbar.make(findViewById(android.R.id.content),
+                                        "There are no noises saved on the system!", Snackbar.LENGTH_SHORT)
+                                        .setAction("Action", null).show();
+                            } else {
+                                for (int counter = 0; counter < docIdArray.size(); counter ++) {
                                     // delete all noises (one at a time) from DB using Document ID obtained from DB query
-                                    dBNoises.collection("trigger_noises").document(docId)
-                                            .delete().addOnSuccessListener(new OnSuccessListener< Void >() {
+                                    dBNoises.collection("trigger_noises").document(docIdArray.get(counter))
+                                            .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Log.d(TAG_All_Delete, "DocumentSnapshot successfully deleted!");
+                                            //Log.d(TAG_All_Delete, "Deletion Success");
                                         }
                                     })
                                             .addOnFailureListener(new OnFailureListener() {
@@ -370,14 +368,18 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                                                     Log.d(TAG_All_Delete, "Error deleting document", e);
                                                 }
                                             });
+                                    Log.d(TAG_All_Delete, "Array Size after loop iteration : " + docIdArray.size());
                                 }
+                                docIdArray.clear();
+                                Log.d(TAG_All_Delete, "Array Size at end of loop : " + docIdArray.size());
                             }
-                        } else {
-                            Log.d(TAG_All_Delete, "Error getting documents: ", task.getException());
                         }
+                    } else {
+                        Log.d(TAG_All_Delete, "Error getting documents: ", task.getException());
                     }
-                });
-            }
+                }
+            });
+
             // Display message to confirm noise has been deleted
             Snackbar.make(findViewById(android.R.id.content),
                     "All Trigger Noises Deleted", Snackbar.LENGTH_LONG)
