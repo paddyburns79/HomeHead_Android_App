@@ -11,10 +11,8 @@ import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -30,13 +28,14 @@ import java.util.Map;
  */
 public class MyFirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
-    private static final String TAG = "FirebaseMessagingServic";
-    // initialise instance of Firebase Firestore
+     // initialise instance of Firebase Firestore
     FirebaseFirestore dBase = FirebaseFirestore.getInstance();
-
     // inititalise instance of DatabaseHelper
     DatabaseHelper notificationsDB;
 
+    /**
+     * constructor with args
+      */
     public MyFirebaseMessagingService(FirebaseFirestore dBase) {
         this.dBase = dBase;
     }
@@ -61,25 +60,19 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
                  .build();
          dBase.setFirestoreSettings(settings);
 
-         /*// retrieve message data
-         Map<String, String> data = remoteMessage.getData();
-         String title = data.get("title");
-         String messageBody = data.get("body");*/
-
          // forward notification data to sendNotification method if areHeadphonesConnected value = true
          if (areHeadphonesConnected()) {
              // retrieve message data
              Map<String, String> data = remoteMessage.getData();
              String title = data.get("title");
              String messageBody = data.get("body");
-
+            // call method to handle message content
             sendNotification(title, messageBody);
             // add message data to SQLite database
             notificationsDB = new DatabaseHelper(this);
             addMsgDataToDB(messageBody);
          }
     }
-
 
     /**
      * Create and show a simple notification containing the received FCM message.
@@ -92,7 +85,7 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
-
+        // set message parameters
         String channelId = getString(R.string.default_notification_channel_id);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
@@ -107,10 +100,9 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
                         .setPriority(2)
                         .setVibrate(new long[1000])
                         .setContentIntent(pendingIntent);
-
+        // create instance of notification manager
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         // Since android Oreo notification channel is needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId,
@@ -122,12 +114,10 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
 
         assert notificationManager != null;
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
-
     }
 
     @Override
     public void onDeletedMessages() {
-
     }
 
     /**
@@ -137,6 +127,7 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
      */
     @Override
     public void onNewToken(String newToken) {
+        // access device registration token
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
@@ -173,7 +164,7 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
      * @return
      */
     private boolean areHeadphonesConnected(){
-
+        // access device headphone manager
         AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         AudioDeviceInfo[] audioDevices = audioManager.getDevices(AudioManager.GET_DEVICES_ALL);
         for(AudioDeviceInfo deviceInfo : audioDevices)
@@ -188,9 +179,11 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
         return false;
     }
 
+    /**
+     * Adds message data to SQLite Database
+     * @param msgBodyToDB
+     */
     public void addMsgDataToDB(String msgBodyToDB) {
-
         boolean insertData = notificationsDB.addData(msgBodyToDB);
-
     }
 }
