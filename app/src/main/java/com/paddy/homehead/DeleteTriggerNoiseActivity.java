@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,7 +30,6 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,14 +39,11 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
 
     // Access a Cloud Firestore instance
     FirebaseFirestore dBNoises = FirebaseFirestore.getInstance();
-
     // log tag strings
     String TAG_All_Delete =  "allRecordsDelete";
     String TAG_Doc_Delete =  "docDelete";
-
     // Strings to accept user input data
     String deviceId, ipAddress, devicePassword, noiseToDelete;
-
     // Input values to hold input field data
     EditText devicePasswordInput;
     EditText noiseToDeleteInput;
@@ -113,7 +108,6 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                     // Accessing SharedPreferences Data (Stored Device ID)
                     SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
                     deviceId = deviceIDSharedPref.getString("rbp_device_id", "");
-
                     // asynchronous calling of method to execute SSH connection
                     new AsyncTask<Integer, Void, Void>() {
                         @Override
@@ -138,7 +132,6 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                 // retrieval of input field data on button click
                 devicePassword = devicePasswordInput.getText().toString().trim();
                 noiseToDelete = noiseToDeleteInput.getText().toString().trim();
-
                 // check if Specific 'Noise to Delete' and Password fields are empty
                 if ((noiseToDeleteInput.length() !=0) && (devicePasswordInput.length() == 0)) {
                     // messsage to highlight empty fields
@@ -157,7 +150,6 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                     // Accessing SharedPreferences Data (Stored Device ID)
                     SharedPreferences deviceIDSharedPref = getSharedPreferences("device_id_shared_pref", Context.MODE_PRIVATE);
                     deviceId = deviceIDSharedPref.getString("rbp_device_id", "");
-
                     // call method to diplay alert dialog box to confirm delete all noises stored
                     confirmDeleteAllBtnAlertDialog();
                 }
@@ -174,13 +166,17 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
             JSch jsch = new JSch();
             Session session = jsch.getSession(deviceId, ipAddress, port);
             session.setPassword(devicePassword);
+            // Avoid asking for key confirmation
             session.setConfig("StrictHostKeyChecking", "no");
             session.setTimeout(10000);
+            // Connect Session
             session.connect();
+            //  Create SSH channel
             ChannelExec channel = (ChannelExec)session.openChannel("exec");
+            // execute command
             channel.setCommand("cd sopare; ./sopare.py -d "+noiseToDelete);
+            //connect channel
             channel.connect();
-
             // query Firestore database - create a reference to the trigger_noises collection
             CollectionReference noisesRef = dBNoises.collection("trigger_noises");
             // Create a query against the collection.
@@ -260,7 +256,6 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                 dialogInterface.cancel();
             }
         });
-
         // set positive 'yes' button
         deleteAllConfirm.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @SuppressLint("StaticFieldLeak")
@@ -291,16 +286,21 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
     public void executeSSHCommandDeleteAllNoisesRawFiles(){
         int port=22;
         try{
+            // Set SSH Session and Parameters
             JSch jsch = new JSch();
             Session session = jsch.getSession(deviceId, ipAddress, port);
             session.setPassword(devicePassword);
+            // Avoid asking for key confirmation
             session.setConfig("StrictHostKeyChecking", "no");
             session.setTimeout(10000);
+            // Connect Session
             session.connect();
+            //  Create SSH channel
             ChannelExec channel = (ChannelExec)session.openChannel("exec");
+            // Execute command
             channel.setCommand("cd sopare; rm dict/*.raw");
+            // connect channel
             channel.connect();
-
             // Functions conditional on the channel being open (i.e. command being executed)
             while (!channel.isClosed()) {
                 // Display message to confirm noise has been deleted
@@ -326,16 +326,21 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
     public void executeSSHCommandDeleteAllNoiseEntries(){
         int port=22;
         try{
+            // Set SSH Session and Parameters
             JSch jsch = new JSch();
             Session session = jsch.getSession(deviceId, ipAddress, port);
             session.setPassword(devicePassword);
+            // Avoid asking for key confirmation
             session.setConfig("StrictHostKeyChecking", "no");
             session.setTimeout(10000);
+            // Connect Session
             session.connect();
+            //  Create SSH channel
             ChannelExec channel = (ChannelExec)session.openChannel("exec");
+            // Execute command
             channel.setCommand("cd sopare; ./sopare.py -d '*'");
+            // connect channel
             channel.connect();
-
              // query Firestore database
             dBNoises.collection("trigger_noises").get().addOnCompleteListener
                     (new OnCompleteListener<QuerySnapshot>() {
@@ -379,7 +384,6 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
                     }
                 }
             });
-
             // Display message to confirm noise has been deleted
             Snackbar.make(findViewById(android.R.id.content),
                     "All Trigger Noises Deleted", Snackbar.LENGTH_LONG)
@@ -396,6 +400,4 @@ public class DeleteTriggerNoiseActivity extends AppCompatActivity {
         }
 
     }
-
-
 }

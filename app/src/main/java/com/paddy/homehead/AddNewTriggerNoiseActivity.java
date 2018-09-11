@@ -277,8 +277,6 @@ public class AddNewTriggerNoiseActivity extends AppCompatActivity {
             ChannelExec channel = (ChannelExec)session.openChannel("exec");
             // Execute command
             channel.setCommand("cd sopare; ./sopare.py -c");
-
-
             // Obtain command line output as String (via InputStream)
             InputStream errStreamSaveNoise = channel.getInputStream();
             // connect to channel
